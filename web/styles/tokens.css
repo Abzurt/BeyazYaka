@@ -1,0 +1,36 @@
+:root {
+  /* Colors - Base */
+  --bg-dark: #0A0C10;
+  --bg-card: #14171C;
+  --bg-card-hover: #1C2027;
+  --border-dim: rgba(255, 255, 255, 0.08);
+  --border-bright: rgba(255, 255, 255, 0.15);
+  
+  /* Accent - Lime Neon (Zengin & Şık) */
+  --accent: #C8F63F;
+  --accent-muted: #A3C934;
+  --accent-glow: rgba(200, 246, 63, 0.3);
+  
+  /* Text */
+  --text-primary: #FFFFFF;
+  --text-secondary: #8E95A2;
+  --text-muted: #5D636F;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+  
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 64px;
+  
+  /* Transitions */
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 12px;
+}

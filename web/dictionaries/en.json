@@ -1,0 +1,217 @@
+{
+    "common": {
+        "title": "White Collar Files",
+        "subtitle": "WHITE",
+        "dosyalar": "Files 📂",
+        "forum": "Forum 🎭",
+        "survival": "Survival 🧰",
+        "testler": "Tests 🧠",
+        "register": "Register",
+        "copyright": "© 2026 White Collar Files. The natural habitat of the corporate human."
+    },
+    "forum": {
+        "title": "Community Forum",
+        "subtitle": "More sincere, more unfiltered discussions.",
+        "loading": "Loading categories...",
+        "empty": "No forum categories yet.",
+        "postsCount": "posts",
+        "categories": [
+            { "name": "Realities & Lies", "slug": "realities-and-lies", "description": "Unfiltered version of corporate life. For members only." },
+            { "name": "Salary & Benefits", "slug": "salary-and-benefits", "description": "Who gets how much? Transparent salary discussions." },
+            { "name": "Office Gossip", "slug": "office-gossip", "description": "Whispers by the coffee machine." }
+        ]
+    },
+    "home": {
+        "emptyCarousel": "No stories to show at the moment.",
+        "trendTitle": "Trending Corporate Stories",
+        "viewAll": "View All \u2192",
+        "survivalBadge": "Corporate Survival Guide",
+        "survivalTitle": "Survival Kit",
+        "survivalSubtitle": "From noise-canceling headphones to ergonomic chairs; equipment to maintain sanity in the corporate environment.",
+        "survivalButton": "Browse Equipment",
+        "starVotes": "votes",
+        "timeAgo": {
+            "hours": "hours ago",
+            "yesterday": "Yesterday"
+        },
+        "trends": [
+            {
+                "title": "Corporate Email Language Dictionary",
+                "subtitle": "Facts and Lies",
+                "content": "\"As discussed\" actually means \"I already told you but you didn't understand.\" Here are the others...",
+                "votes": "128",
+                "time": "2"
+            },
+            {
+                "title": "Levent Afterwork Guide 2026",
+                "subtitle": "Networking Spots",
+                "content": "Places to escape the team on Friday evening or where you won't bump into the boss...",
+                "votes": "84",
+                "time": "5"
+            },
+            {
+                "title": "The Art of Looking Happy on LinkedIn",
+                "subtitle": "LinkedIn Reality",
+                "content": "How to say the \"sailing towards new adventures\" lie more professionally when resigning?",
+                "votes": "210",
+                "time": "Yesterday"
+            }
+        ]
+    },
+    "comments": {
+        "like": "Like",
+        "reply": "Reply",
+        "replyTo": "Reply to {author}...",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "yourDecision": "Your Decision",
+        "opinion": "Express your opinion, shape the community.",
+        "rate": "Rate:",
+        "placeholder": "Detail your experience...",
+        "placeholderDisabled": "Give a rating first to comment",
+        "errorNoStar": "Please give a star rating first to submit a comment.",
+        "loginToJoin": "Log In to Join",
+        "voteOnly": "Vote Only",
+        "voting": "Voting...",
+        "submitting": "Submitting...",
+        "rateAndComment": "Rate and Comment",
+        "back": "Go Back",
+        "noComments": "No comments yet. Be the first to comment!"
+    },
+    "ads": {
+        "hubTitle": "Survival Kit",
+        "hubSubtitle": "Professional equipment to maintain sanity in corporate life.",
+        "searchPlaceholder": "Search equipment...",
+        "buyNow": "Details & Buy",
+        "backToHub": "Back to All Equipment",
+        "relatedContent": "Related Content",
+        "allCategories": "All",
+        "commentsTitle": "Experiences & Comments",
+        "admin": {
+            "title": "Campaign Management",
+            "subtitle": "Manage site revenue model and sponsored content.",
+            "stats": {
+                "activeCount": "Active Campaigns",
+                "totalClicks": "Total Clicks",
+                "avgCtr": "Avg. CTR",
+                "thisMonth": "Added This Month"
+            },
+            "table": {
+                "title": "Ad Title",
+                "slot": "Slot / Category",
+                "status": "Status",
+                "ctr": "Performance",
+                "actions": "Actions"
+            },
+            "form": {
+                "addTitle": "Add New Campaign",
+                "editTitle": "Edit Campaign",
+                "save": "Save Changes",
+                "imageLabel": "Image URL",
+                "targetLabel": "Target URL (Affiliate)",
+                "bodyLabel": "Description / Content"
+            }
+        }
+    },
+    "quizzes": {
+        "hub": {
+            "badge": "VIRAL ANALYSIS",
+            "title": "Discover Your Corporate Identity",
+            "subtitle": "Discover yourself with {boldStart}%100 local and corporate{boldEnd} tests that delve deep into plaza life, sometimes making you laugh and sometimes making you think.",
+            "empty": "No tests found yet.",
+            "emptySub": "Our editors are preparing the most viral tests, coming here soon!",
+            "test": "TEST",
+            "duration": "{time} min",
+            "participation": "{count} participation",
+            "startBtn": "Start Test"
+        },
+        "detail": {
+            "back": "Go Back",
+            "duration": "{time} min",
+            "participation": "{count} participation",
+            "ready": "Are You Ready for the Test?",
+            "intro": "This test consists of {count} questions. Please answer the questions honestly, thinking about your corporate identity.",
+            "startBtn": "Start Test",
+            "progress": "Question {current} / {total}",
+            "next": "Next Question",
+            "prev": "Back",
+            "finish": "See Results",
+            "communityTitle": "What Does the Community Say?",
+            "loading": "Loading...",
+            "notFound": "Quiz not found."
+        },
+        "result": {
+            "loading": "Loading results...",
+            "done": "Done!",
+            "scoreLabel": "SCORE",
+            "communityHeader": "Community Comparison",
+            "communityText": "{boldStart}%{percentage}{boldEnd} of users got the same result as you.",
+            "totalText": "Your place among a total of {count} participations...",
+            "share": "Share Result",
+            "retry": "Retake Quiz",
+            "backToHub": "Back to All Tests",
+            "shareText": "I took the \"{title}\" test on White Collar Files! My result: {result}"
+        },
+        "types": {
+            "strategist": {
+                "title": "Strategy Genius",
+                "desc": "You are a complete playmaker. With your timing of emails and your quiet but effective stance in meetings, you are the invisible manager of the plaza."
+            },
+            "warrior": {
+                "title": "Crisis Management Expert",
+                "desc": "If there's a fire, you're there. You're the one who keeps your cool even in the most stressful moments and brings the team to the harbor."
+            },
+            "social": {
+                "title": "Networker / Social Butterfly",
+                "desc": "You know best who has what trouble with whom, and the whispers by the coffee machine. You are that person everyone knows."
+            },
+            "standard": {
+                "title": "Corporate Star",
+                "desc": "You have a balanced, professional, and adaptable nature to every situation. You are an indispensable part of plaza life."
+            }
+        }
+    },
+    "dosyalar": {
+        "title": "Files",
+        "subtitle": "Sectoral news, sponsored content, and financial guides.",
+        "searchPlaceholder": "Search files...",
+        "empty": "No files found yet.",
+        "backToHub": "Back to All Files"
+    },
+    "auth": {
+        "register": {
+            "title": "Join Us",
+            "subtitle": "Outside is too noisy to know what's inside.",
+            "username": "Username",
+            "email": "Email",
+            "password": "Password",
+            "passwordHint": "At least 12 characters, 1 uppercase and 1 number.",
+            "sector": "Sector",
+            "sectorPlaceholder": "Finance, Technology etc.",
+            "city": "City",
+            "cityPlaceholder": "London, NY etc.",
+            "workModel": "Work Model",
+            "submit": "Sign Up",
+            "submitting": "Registering...",
+            "or": "or",
+            "google": "Register with Google",
+            "footer": "Already a member?",
+            "loginLink": "Log In"
+        },
+        "login": {
+            "title": "Welcome Back",
+            "subtitle": "Ready to remove the filters of corporate life?",
+            "success": "Registration successful! You can now log in.",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Log In",
+            "submitting": "Logging In...",
+            "or": "or",
+            "google": "Continue with Google",
+            "footer": "Not a member yet?",
+            "registerLink": "Register Now",
+            "errorDefault": "An error occurred, please try again.",
+            "errorCredentials": "Invalid email or password."
+        }
+    }
+}

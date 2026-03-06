@@ -1,0 +1,346 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.reorderList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.itemCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg);
+  gap: var(--space-xl);
+  transition: var(--transition);
+}
+
+.itemCard:hover {
+  border-color: var(--accent);
+}
+
+.itemCard.paused {
+  opacity: 0.6;
+}
+
+.dragHandle {
+  color: var(--text-muted);
+  cursor: grab;
+}
+
+.previewImage {
+  width: 160px;
+  height: 90px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border-dim);
+}
+
+.imgPlaceholder {
+  color: var(--border-dim);
+}
+
+.actualImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.titleInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.localeBadge {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+.itemContent h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.statusBadge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.statusBadge.active {
+  background-color: rgba(200, 246, 63, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent-glow);
+}
+
+.statusBadge.paused {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.itemContent p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.linkInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--accent);
+  font-family: monospace;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.deleteBtn:hover {
+  color: #ef4444 !important;
+}
+
+.tips {
+  padding: var(--space-lg);
+  background-color: rgba(200, 246, 63, 0.03);
+  border: 1px solid var(--accent-glow);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 500px;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.formGroup input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 12px;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition);
+}
+
+.formGroup input:focus {
+  border-color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.assetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.assetThumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  aspect-ratio: 16/9;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.assetThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.assetThumb.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(200, 246, 63, 0.3);
+}
+
+.assetSelectedHint {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent);
+  color: #000;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.selectInput {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 12px;
+  color: var(--text-primary);
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.selectInput:focus {
+  border-color: var(--accent);
+}
+
+.uploadArea {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 2px dashed var(--border-dim);
+  border-radius: 12px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.uploadArea:hover {
+  border-color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.uploadHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.uploadPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: var(--space-xl);
+  color: var(--text-muted);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,237 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-xl);
+}
+
+.categoryCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.categoryCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.categoryCard.hidden {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.cardHeader {
+  padding: var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.iconBox {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cardBody {
+  padding: var(--space-lg);
+  flex: 1;
+}
+
+.cardBody h3 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.cardBody p {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-bottom: var(--space-md);
+}
+
+.stats {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stats strong {
+  color: var(--text-primary);
+}
+
+.cardFooter {
+  padding: var(--space-md) var(--space-lg);
+  background-color: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.actions button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  transition: var(--transition);
+}
+
+.actions button:hover {
+  color: var(--text-primary);
+}
+
+.deleteBtn:hover {
+  color: #ef4444 !important;
+}
+
+.addPlaceholder {
+  border: 2px dashed var(--border-dim);
+  border-radius: var(--radius-lg);
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  min-height: 200px;
+}
+
+.addPlaceholder:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 500px;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal h2 {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.formGroup input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius);
+  padding: 12px;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition);
+}
+
+.formGroup input:focus {
+  border-color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

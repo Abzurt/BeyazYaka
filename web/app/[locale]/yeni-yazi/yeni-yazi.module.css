@@ -1,0 +1,153 @@
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+.title {
+  font-size: 40px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-xxl);
+}
+
+.formCard {
+  padding: var(--space-xl) !important;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.inputGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  transition: var(--transition);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.textarea {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 16px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius);
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkboxLabel input {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.rules {
+  list-style: disc;
+  padding-left: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rules li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

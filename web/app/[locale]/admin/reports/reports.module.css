@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.urgentBadge {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.reportCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.reportCard:hover {
+  border-color: var(--border-dim-hover);
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+.reportCard.open {
+  border-left: 4px solid #ef4444;
+}
+
+.reportCard.reviewing {
+  border-left: 4px solid #f59e0b;
+}
+
+.reportCard.resolved {
+  opacity: 0.6;
+  border-left: 4px solid var(--accent);
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reportHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusDot.open { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
+.statusDot.reviewing { background-color: #f59e0b; }
+.statusDot.resolved { background-color: var(--accent); }
+
+.reportTarget {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.reportTarget strong {
+  color: var(--text-primary);
+}
+
+.reason {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.reporter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.reportActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-md);
+}
+
+.decisionBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.dismissBtn:hover {
+  color: #ef4444 !important;
+}
+
+@media (max-width: 800px) {
+  .reportCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xl);
+  }
+  
+  .reportActions {
+    width: 100%;
+    align-items: stretch;
+  }
+}

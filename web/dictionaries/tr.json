@@ -1,0 +1,217 @@
+{
+    "common": {
+        "title": "Beyaz Yaka Dosyası",
+        "subtitle": "BEYAZ",
+        "dosyalar": "Dosyalar 📂",
+        "forum": "Forum 🎭",
+        "survival": "Survival 🧰",
+        "testler": "Testler 🧠",
+        "register": "Kayıt Ol",
+        "copyright": "© 2026 Beyaz Yaka Dosyası. Plaza insanının doğal yaşam alanı."
+    },
+    "forum": {
+        "title": "Topluluk Forumu",
+        "subtitle": "Daha samimi, daha filtresiz tartışma ortamı.",
+        "loading": "Kategoriler yükleniyor...",
+        "empty": "Henüz forum kategorisi yok.",
+        "postsCount": "gönderi",
+        "categories": [
+            { "name": "Gerçekler & Yalanlar", "slug": "gercekler-ve-yalanlar", "description": "Kurumsal hayatın filtresiz hali. Sadece üyeler için." },
+            { "name": "Maaş & Yan Haklar", "slug": "maas-ve-yan-haklar", "description": "Kim ne kadar alıyor? Şeffaf maaş tartışmaları." },
+            { "name": "Ofis Dedikoduları", "slug": "ofis-dedikodulari", "description": "Kahve makinesi başındaki fısıldaşmalar." }
+        ]
+    },
+    "home": {
+        "emptyCarousel": "Şu an gösterilecek manşet bulunmuyor.",
+        "trendTitle": "Trend Plaza Hikayeleri",
+        "viewAll": "Tümünü Gör \u2192",
+        "survivalBadge": "Plaza Hayatta Kalma Rehberi",
+        "survivalTitle": "Survival Kit",
+        "survivalSubtitle": "Gürültü engelleyici kulaklıklardan, ergonomik sandalyelere; plaza ortamında akıl sağlığını koruyacak ekipmanlar.",
+        "survivalButton": "Ekipmanları İncele",
+        "starVotes": "oy",
+        "timeAgo": {
+            "hours": "saat önce",
+            "yesterday": "Dün"
+        },
+        "trends": [
+            {
+                "title": "Kurumsal Mail Dili Çeviri Sözlüğü",
+                "subtitle": "Gerçekler ve Yalanlar",
+                "content": "\"As discussed\" aslında \"Sana daha önce de söyledim ama anlamadın\" demektir. İşte diğerleri...",
+                "votes": "128",
+                "time": "2"
+            },
+            {
+                "title": "Levent Afterwork Rehberi 2026",
+                "subtitle": "Network Mekanları",
+                "content": "Cuma akşamı ekipten kaçıp kafa dinleyeceğiniz veya patronla karşılaşmayacağınız mekanlar...",
+                "votes": "84",
+                "time": "5"
+            },
+            {
+                "title": "LinkedIn'de Mutlu Görünme Sanatı",
+                "subtitle": "LinkedIn Gerçeği",
+                "content": "İstifa ederken \"yeni maceralara yelken açıyoruz\" yalanını nasıl daha profesyonel söyleriz?",
+                "votes": "210",
+                "time": "Dün"
+            }
+        ]
+    },
+    "comments": {
+        "like": "Beğen",
+        "reply": "Yanıtla",
+        "replyTo": "{author} kullanıcısına yanıt ver...",
+        "cancel": "İptal",
+        "submit": "Gönder",
+        "yourDecision": "Senin Kararın",
+        "opinion": "Fikrini beyan et, topluluğa yön ver.",
+        "rate": "Puanla:",
+        "placeholder": "Deneyimlerini detaylandır...",
+        "placeholderDisabled": "Yorum yapmak için önce puan verin",
+        "errorNoStar": "Yorum göndermek için lütfen önce yıldız verin.",
+        "loginToJoin": "Katılmak İçin Giriş Yap",
+        "voteOnly": "Sadece Puan Ver",
+        "voting": "Oylanıyor...",
+        "submitting": "Gönderiliyor...",
+        "rateAndComment": "Puanla ve Yorum Yap",
+        "back": "Geri Dön",
+        "noComments": "Henüz yorum yapılmamış. İlk yorumu sen yap!"
+    },
+    "ads": {
+        "hubTitle": "Survival Kit",
+        "hubSubtitle": "Plaza hayatında akıl sağlığını koruyan profesyonel ekipmanlar.",
+        "searchPlaceholder": "Ekipman ara...",
+        "buyNow": "Detaylar & Satın Al",
+        "backToHub": "Tüm Ekipmanlara Dön",
+        "relatedContent": "İlgili İçerikler",
+        "allCategories": "Tümü",
+        "commentsTitle": "Deneyimler & Yorumlar",
+        "admin": {
+            "title": "Kampanya Yönetimi",
+            "subtitle": "Sitenin gelir modelini ve sponsorlu içerikleri yönetin.",
+            "stats": {
+                "activeCount": "Aktif Kampanyalar",
+                "totalClicks": "Toplam Tıklama",
+                "avgCtr": "Ort. CTR",
+                "thisMonth": "Bu Ay Eklenen"
+            },
+            "table": {
+                "title": "İlan Başlığı",
+                "slot": "Slot / Kategori",
+                "status": "Durum",
+                "ctr": "Performans",
+                "actions": "İşlemler"
+            },
+            "form": {
+                "addTitle": "Yeni Kampanya Ekle",
+                "editTitle": "Kampanyayı Düzenle",
+                "save": "Kaydet",
+                "imageLabel": "Görsel URL",
+                "targetLabel": "Hedef URL (Affiliate)",
+                "bodyLabel": "Açıklama / İçerik"
+            }
+        }
+    },
+    "quizzes": {
+        "hub": {
+            "badge": "VİRAL ANALİZLER",
+            "title": "Kurumsal Kimliğini Keşfet",
+            "subtitle": "Plaza hayatının derinliklerine inen, bazen güldüren bazen de düşündüren {boldStart}%100 yerli ve kurumsal{boldEnd} testlerle kendini tanı.",
+            "empty": "Henüz test bulunmuyor.",
+            "emptySub": "Editörlerimiz en viral testleri hazırlıyor, yakında burada!",
+            "test": "TEST",
+            "duration": "{time} dk",
+            "participation": "{count} katılım",
+            "startBtn": "Teste Başla"
+        },
+        "detail": {
+            "back": "Geri Dön",
+            "duration": "{time} dk",
+            "participation": "{count} katılım",
+            "ready": "Teste Hazır mısın?",
+            "intro": "Bu test {count} sorudan oluşmaktadır. Lütfen soruları kurumsal kimliğini düşünerek dürüstçe yanıtla.",
+            "startBtn": "Teste Başla",
+            "progress": "Soru {current} / {total}",
+            "next": "Sonraki Soru",
+            "prev": "Geri",
+            "finish": "Sonuçları Gör",
+            "communityTitle": "Topluluk Ne Diyor?",
+            "loading": "Yükleniyor...",
+            "notFound": "Test bulunamadı."
+        },
+        "result": {
+            "loading": "Sonuçlar yükleniyor...",
+            "done": "İşlem Tamam!",
+            "scoreLabel": "PUAN",
+            "communityHeader": "Topluluk Karşılaştırması",
+            "communityText": "Kullanıcıların {boldStart}%{percentage}{boldEnd}'si seninle aynı sonucu aldı.",
+            "totalText": "Toplam {count} katılım arasında senin yerin...",
+            "share": "Sonucu Paylaş",
+            "retry": "Yeniden Çöz",
+            "backToHub": "Tüm Testlere Dön",
+            "shareText": "Beyaz Yaka Dosyası'nda \"{title}\" testini çözdüm! Sonucum: {result}"
+        },
+        "types": {
+            "strategist": {
+                "title": "Strateji Dehası",
+                "desc": "Sen tam bir oyun kurucusun. Mailleri zamanlaman, toplantılardaki sessiz ama etkili duruşunla plazanın görünmez yöneticisisin."
+            },
+            "warrior": {
+                "title": "Kriz Yönetim Uzmanı",
+                "desc": "Yangın varsa sen ordasın. En stresli anlarda bile soğukkanlılığını koruyarak ekibi limana ulaştıran sensin."
+            },
+            "social": {
+                "title": "Networker / Sosyal Kelebek",
+                "desc": "Kimin kiminle ne derdi olduğunu, kahve makinesi başındaki fısıldaşmaları en iyi sen biliyorsun. Herkesin tanıdığı o kişisin."
+            },
+            "standard": {
+                "title": "Kurumsal Yıldız",
+                "desc": "Dengeli, profesyonel ve her duruma adapte olabilen bir yapın var. Plaza hayatının vazgeçilmez bir parçasısın."
+            }
+        }
+    },
+    "dosyalar": {
+        "title": "Dosyalar",
+        "subtitle": "Sektörel haberler, sponsorlu içerikler ve finansal rehberler.",
+        "searchPlaceholder": "Dosya ara...",
+        "empty": "Henüz dosya bulunmuyor.",
+        "backToHub": "Tüm Dosyalara Dön"
+    },
+    "auth": {
+        "register": {
+            "title": "Aramıza Katıl",
+            "subtitle": "İçeridekileri bilmek için dışarısı çok gürültülü.",
+            "username": "Kullanıcı Adı",
+            "email": "E-posta",
+            "password": "Şifre",
+            "passwordHint": "En az 12 karakter, 1 büyük harf ve 1 rakam.",
+            "sector": "Sektör",
+            "sectorPlaceholder": "Finans, Teknoloji vb.",
+            "city": "Şehir",
+            "cityPlaceholder": "İstanbul",
+            "workModel": "Çalışma Modeli",
+            "submit": "Kayıt Ol",
+            "submitting": "Kayıt Yapılıyor...",
+            "or": "veya",
+            "google": "Google ile Kayıt Ol",
+            "footer": "Zaten üye misin?",
+            "loginLink": "Giriş Yap"
+        },
+        "login": {
+            "title": "Hoş Geldiniz",
+            "subtitle": "Plaza hayatına filtreleri kaldırmaya hazır mısın?",
+            "success": "Kayıt başarılı! Şimdi giriş yapabilirsin.",
+            "email": "E-posta",
+            "password": "Şifre",
+            "submit": "Giriş Yap",
+            "submitting": "Giriş Yapılıyor...",
+            "or": "veya",
+            "google": "Google ile Devam Et",
+            "footer": "Henüz üye değil misin?",
+            "registerLink": "Hemen Kayıt Ol",
+            "errorDefault": "Bir hata oluştu, lütfen tekrar deneyin.",
+            "errorCredentials": "Hatalı e-posta veya şifre."
+        }
+    }
+}

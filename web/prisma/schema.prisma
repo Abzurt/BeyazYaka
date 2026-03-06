@@ -1,0 +1,444 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  member
+  moderator
+  admin
+}
+
+enum ContentStatus {
+  draft
+  pending
+  published
+  rejected
+  archived
+}
+
+enum ContentArea {
+  forum
+  general
+}
+
+enum VisibilityType {
+  public
+  members_only
+}
+
+enum ReportStatus {
+  open
+  reviewing
+  resolved
+  dismissed
+}
+
+enum AdType {
+  banner
+  sponsored_content
+  affiliate_widget
+}
+
+model User {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username          String?            @unique @db.VarChar(30)
+  email             String             @unique @db.VarChar(255)
+  emailVerified     DateTime?          @map("email_verified")
+  passwordHash      String?            @map("password_hash")
+  role              UserRole           @default(member)
+  displayName       String?            @map("display_name") @db.VarChar(60)
+  bio               String?
+  image             String?            @map("avatar_url") // Mapping avatarUrl to image for NextAuth
+  city              String?            @db.VarChar(100)
+  sector            String?            @db.VarChar(100)
+  workModel         String?            @map("work_model") @db.VarChar(20)
+  isActive          Boolean            @default(true) @map("is_active")
+  isBanned          Boolean            @default(false) @map("is_banned")
+  
+  // Security & Lockout
+  failedLoginAttempts Int              @default(0) @map("failed_login_attempts")
+  lockoutUntil        DateTime?        @map("lockout_until")
+  
+  // Password Reset
+  resetTokenHash      String?          @map("reset_token_hash")
+  resetTokenExpires   DateTime?        @map("reset_token_expires")
+  
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at")
+  lastLoginAt       DateTime?          @map("last_login_at")
+  
+  accounts          Account[]
+  sessions          Session[]
+  posts             Post[]
+  comments          Comment[]
+  ratings           PostRating[]
+  likedComments     CommentLike[]
+  reportsSubmitted  Report[]           @relation("Reporter")
+  reportsReviewed   Report[]           @relation("Reviewer")
+  savedPosts        SavedPost[]
+  badges            UserBadge[]
+  quizResults       QuizResult[]
+  emailLeads        EmailLead[]
+  subscriptions     UserSubscription[]
+  logs              UserLog[]
+
+  @@map("users")
+}
+
+model UserLog {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action     String   @db.VarChar(100) // e.g., "create_post", "edit_post", "delete_post", "login", "update_user"
+  targetId   String?  @map("target_id") @db.Uuid
+  targetType String?  @map("target_type") @db.VarChar(50)
+  details    Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("user_logs")
+}
+
+model Account {
+  id                 String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId             String  @map("user_id") @db.Uuid
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id") @db.Uuid
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Category {
+  id                String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId          String?        @map("parent_id") @db.Uuid
+  parent            Category?      @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children          Category[]     @relation("CategoryToCategory")
+  name              String         @db.VarChar(120)
+  slug              String         @unique @db.VarChar(140)
+  description       String?
+  area              ContentArea
+  defaultVisibility VisibilityType @default(members_only) @map("default_visibility")
+  sortOrder         Int            @default(0) @map("sort_order")
+  isActive          Boolean        @default(true) @map("is_active")
+  locale            String         @default("tr")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  
+  posts             Post[]
+
+  @@map("categories")
+}
+
+model Post {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authorId       String         @map("author_id") @db.Uuid
+  author         User           @relation(fields: [authorId], references: [id])
+  categoryId     String         @map("category_id") @db.Uuid
+  category       Category       @relation(fields: [categoryId], references: [id])
+  title          String         @db.VarChar(180)
+  slug           String         @unique @db.VarChar(220)
+  excerpt        String?
+  content        String
+  coverImageUrl  String?        @map("cover_image_url")
+  area           ContentArea
+  visibility     VisibilityType
+  status         ContentStatus  @default(pending)
+  isAnonymous    Boolean        @default(false) @map("is_anonymous")
+  isFeatured     Boolean        @default(false) @map("is_featured")
+  allowComments  Boolean        @default(true) @map("allow_comments")
+  isSponsored    Boolean        @default(false) @map("is_sponsored")
+  viewCount      Int            @default(0) @map("view_count")
+  commentCount   Int            @default(0) @map("comment_count")
+  publishedAt    DateTime?      @map("published_at")
+  locale         String         @default("tr")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @default(now()) @updatedAt @map("updated_at")
+  
+  tags           PostTag[]
+  comments       Comment[]
+  ratings        PostRating[]
+  reports        Report[]
+  savedBy        SavedPost[]
+
+  @@map("posts")
+}
+
+model Tag {
+  id    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String    @unique @db.VarChar(60)
+  slug  String    @unique @db.VarChar(80)
+  posts PostTag[]
+
+  @@map("tags")
+}
+
+model PostTag {
+  postId String @map("post_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id])
+  tag    Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+model Comment {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  postId    String    @map("post_id") @db.Uuid
+  post      Post      @relation(fields: [postId], references: [id])
+  userId    String    @map("user_id") @db.Uuid
+  user      User      @relation(fields: [userId], references: [id])
+  parentId  String?   @map("parent_id") @db.Uuid
+  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentToComment")
+  quizId    String?   @map("quiz_id") @db.Uuid
+  quiz      Quiz?     @relation(fields: [quizId], references: [id])
+  content   String
+  isEdited  Boolean   @default(false) @map("is_edited")
+  isDeleted Boolean   @default(false) @map("is_deleted")
+  likeCount Int       @default(0) @map("like_count")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  
+  likes     CommentLike[]
+  reports   Report[]
+
+  @@map("comments")
+}
+
+model PostRating {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  quizId    String?   @map("quiz_id") @db.Uuid
+  quiz      Quiz?     @relation(fields: [quizId], references: [id])
+  rating    Int      @db.SmallInt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([postId, userId])
+  @@map("post_ratings")
+}
+
+model CommentLike {
+  commentId String   @map("comment_id") @db.Uuid
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@id([commentId, userId])
+  @@map("comment_likes")
+}
+
+model Report {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reporterUserId   String       @map("reporter_user_id") @db.Uuid
+  reporter         User         @relation("Reporter", fields: [reporterUserId], references: [id])
+  targetType       String       @map("target_type") @db.VarChar(20)
+  targetPostId     String?      @map("target_post_id") @db.Uuid
+  targetPost       Post?        @relation(fields: [targetPostId], references: [id])
+  targetCommentId  String?      @map("target_comment_id") @db.Uuid
+  targetComment    Comment?     @relation(fields: [targetCommentId], references: [id])
+  reason           String
+  status           ReportStatus @default(open)
+  reviewedBy       String?      @map("reviewed_by") @db.Uuid
+  reviewer         User?        @relation("Reviewer", fields: [reviewedBy], references: [id])
+  reviewedAt       DateTime?    @map("reviewed_at")
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  @@map("reports")
+}
+
+model SavedPost {
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String   @map("post_id") @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@id([userId, postId])
+  @@map("saved_posts")
+}
+
+model Badge {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String      @unique @db.VarChar(80)
+  slug        String      @unique @db.VarChar(100)
+  description String?
+  users       UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  userId   String   @map("user_id") @db.Uuid
+  user     User     @relation(fields: [userId], references: [id])
+  badgeId  String   @map("badge_id") @db.Uuid
+  badge    Badge    @relation(fields: [badgeId], references: [id])
+  earnedAt DateTime @default(now()) @map("earned_at")
+
+  @@id([userId, badgeId])
+  @@map("user_badges")
+}
+
+model Quiz {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String         @db.VarChar(160)
+  slug        String         @unique @db.VarChar(180)
+  coverImageUrl String?    @map("cover_image_url")
+  isActive    Boolean        @default(true) @map("is_active")
+  locale      String         @default("tr")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  questions   QuizQuestion[]
+  results     QuizResult[]
+  comments    Comment[]
+  ratings     PostRating[]
+
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quizId       String       @map("quiz_id") @db.Uuid
+  quiz         Quiz         @relation(fields: [quizId], references: [id])
+  questionText String       @map("question_text")
+  sortOrder    Int          @default(0) @map("sort_order")
+  choices      QuizChoice[]
+
+  @@map("quiz_questions")
+}
+
+model QuizChoice {
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  questionId String       @map("question_id") @db.Uuid
+  question   QuizQuestion @relation(fields: [questionId], references: [id])
+  choiceText String       @map("choice_text")
+  score      Int          @default(0)
+  resultKey  String?      @map("result_key") @db.VarChar(80)
+  sortOrder  Int          @default(0) @map("sort_order")
+
+  @@map("quiz_choices")
+}
+
+model QuizResult {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quizId    String   @map("quiz_id") @db.Uuid
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  userId    String?  @map("user_id") @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id])
+  email     String?  @db.VarChar(255)
+  resultKey String   @map("result_key") @db.VarChar(80)
+  score     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("quiz_results")
+}
+
+model EmailLead {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String   @db.VarChar(255)
+  source    String?  @db.VarChar(100)
+  userId    String?  @map("user_id") @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("email_leads")
+}
+
+model AdSlot {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String       @unique @db.VarChar(80)
+  locationKey String       @unique @map("location_key") @db.VarChar(80)
+  description String?
+  adKind      AdType       @default(banner) @map("ad_kind")
+  isActive    Boolean      @default(true) @map("is_active")
+  campaigns   AdCampaign[]
+
+  @@map("ad_slots")
+}
+
+model AdCampaign {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slotId    String   @map("slot_id") @db.Uuid
+  slot      AdSlot   @relation(fields: [slotId], references: [id])
+  title     String   @db.VarChar(160)
+  imageUrl  String?  @map("image_url")
+  body      String?
+  targetUrl String   @map("target_url")
+  startsAt  DateTime? @map("starts_at")
+  endsAt    DateTime? @map("ends_at")
+  isActive  Boolean  @default(true) @map("is_active")
+  locale    String   @default("tr")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ad_campaigns")
+}
+
+model PremiumPlan {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String             @unique @db.VarChar(80)
+  description   String?
+  priceAmount   Decimal            @default(0) @map("price_amount") @db.Decimal(10, 2)
+  billingPeriod String             @default("monthly") @map("billing_period") @db.VarChar(20)
+  isActive      Boolean            @default(true) @map("is_active")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  subscriptions UserSubscription[]
+
+  @@map("premium_plans")
+}
+
+model UserSubscription {
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String      @map("user_id") @db.Uuid
+  user      User        @relation(fields: [userId], references: [id])
+  planId    String      @map("plan_id") @db.Uuid
+  plan      PremiumPlan @relation(fields: [planId], references: [id])
+  startsAt  DateTime    @default(now()) @map("starts_at")
+  endsAt    DateTime?   @map("ends_at")
+  status    String      @default("active") @db.VarChar(20)
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  @@map("user_subscriptions")
+}
+
+model CarouselItem {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  subtitle  String
+  image     String
+  link      String
+  status    String   @default("active")
+  order     Int      @default(0)
+  locale    String   @default("tr")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("carousel_items")
+}

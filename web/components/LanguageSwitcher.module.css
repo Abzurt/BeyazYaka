@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  gap: var(--space-xs);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-dim);
+}
+
+.button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.button.active {
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}

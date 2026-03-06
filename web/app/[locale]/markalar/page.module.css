@@ -1,0 +1,22 @@
+.wrapper {
+  background-color: var(--bg-dark);
+}
+
+.hero {
+  padding: var(--space-xxl) 0;
+  border-bottom: 1px solid var(--border-dim);
+  background: linear-gradient(180deg, rgba(200, 246, 63, 0.05) 0%, transparent 100%);
+  margin-bottom: var(--space-xl);
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 56px);
+  margin-bottom: var(--space-md);
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 700px;
+}

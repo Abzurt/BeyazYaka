@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.starBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  transition: transform 0.1s ease;
+}
+
+.interactive:hover {
+  transform: scale(1.2);
+}
+
+.starIcon {
+  transition: all 0.2s ease;
+}
+
+.voteCount {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}

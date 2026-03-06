@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.quizGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-xl);
+}
+
+.quizCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  transition: var(--transition);
+}
+
+.quizCard:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(200, 246, 63, 0.05);
+  border: 1px solid var(--accent-glow);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.statusBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.statusBadge.published { background-color: rgba(200, 246, 63, 0.1); color: var(--accent); }
+.statusBadge.draft { background-color: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+
+.cardContent h3 {
+  font-size: 20px;
+  margin-bottom: var(--space-md);
+  line-height: 1.4;
+}
+
+.details {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-dim);
+}
+
+.iconButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.iconButtons button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.iconButtons button:hover {
+  color: var(--text-primary);
+}
+
+.deleteBtn:hover {
+  color: #ef4444 !important;
+}
+
+.addCard {
+  background-color: transparent;
+  border: 2px dashed var(--border-dim);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  color: var(--text-muted);
+  cursor: pointer;
+  min-height: 250px;
+  transition: var(--transition);
+}
+
+.addCard:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.01);
+}

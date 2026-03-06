@@ -1,0 +1,189 @@
+.container {
+  padding: var(--space-xxl) var(--space-md);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xxl);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxl);
+}
+
+.configCard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl) !important;
+  border: 1px solid var(--border-dim) !important;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup:last-child {
+  grid-column: 1 / -1;
+}
+
+.inputGroup label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.inputGroup input, .inputGroup textarea, .inputGroup select {
+  padding: 12px;
+  background: var(--bg-app);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.inputGroup input:focus, .inputGroup textarea:focus {
+  border-color: var(--accent);
+}
+
+.questionsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeader h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.questionCard {
+  padding: var(--space-xl) !important;
+  border: 1px solid var(--border-dim) !important;
+  background: var(--bg-card) !important;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.qNum {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.removeBtn {
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.removeBtn:hover {
+  opacity: 1;
+}
+
+.choicesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.choicesList label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.choiceRow {
+  display: grid;
+  grid-template-columns: 1fr 100px 150px 40px;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.choiceInput, .scoreInput, .keySelect {
+  padding: 10px !important;
+  font-size: 14px !important;
+}
+
+.removeChoiceBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.addChoiceBtn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px dashed var(--border-dim);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addChoiceBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-dim);
+}
+
+@media (max-width: 800px) {
+  .configCard {
+    grid-template-columns: 1fr;
+  }
+  .choiceRow {
+    grid-template-columns: 1fr 80px;
+    grid-template-rows: auto auto;
+  }
+  .keySelect {
+    grid-column: 1 / 2;
+  }
+}

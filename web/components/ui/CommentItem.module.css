@@ -1,0 +1,101 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.comment {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: var(--space-lg);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  transition: var(--transition);
+}
+
+.comment:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.commentHeader {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.time {
+  color: var(--text-muted);
+}
+
+.content {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.commentActions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.activeLike {
+  color: var(--accent) !important;
+}
+
+.replyForm {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  animation: slideDown 0.3s ease;
+}
+
+.textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 8px 0;
+  resize: none;
+  font-family: inherit;
+  font-size: 14px;
+  min-height: 60px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.replyActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+.repliesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-left: var(--space-xl);
+}
+
+.replyItem {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.replyIcon {
+  color: var(--text-muted);
+  margin-top: 20px;
+  flex-shrink: 0;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

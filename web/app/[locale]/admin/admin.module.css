@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+}
+
+.content {
+  flex: 1;
+  margin-left: 280px; /* Sidebar width */
+  min-height: 100vh;
+}
+
+.pageContainer {
+  padding: var(--space-xxl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
+  .sidebar {
+    display: none; /* Mobile menu will be handled later if needed */
+  }
+  
+  .content {
+    margin-left: 0;
+  }
+}

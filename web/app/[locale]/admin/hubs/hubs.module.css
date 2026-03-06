@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.hubGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-xl);
+}
+
+.hubCard {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.hubCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.hubCard.draft {
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.hubPreview {
+  height: 140px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(200, 246, 63, 0.05) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.previewIcon {
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.hubBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 800;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.hubBody {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.hubHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hubHeader h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.postsCount {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.slug {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--accent);
+  margin-top: -8px;
+}
+
+.hubActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-dim);
+}
+
+.quickIcons {
+  display: flex;
+  gap: 12px;
+}
+
+.quickIcons button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.quickIcons button:hover {
+  color: var(--text-primary);
+}
