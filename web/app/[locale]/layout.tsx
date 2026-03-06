@@ -8,6 +8,8 @@ import { i18n, type Locale } from '@/lib/i18n-config';
 import { getDictionary } from '@/lib/get-dictionary';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -45,6 +47,8 @@ export default async function RootLayout({
             <LayoutWrapper locale={locale as Locale} dict={dict} menuItems={menuItems}>
               {children}
             </LayoutWrapper>
+            <Analytics />
+            <SpeedInsights />
           </ToastProvider>
         </AuthProvider>
       </body>
