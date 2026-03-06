@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, ExternalLink, ArrowRight, Star, MessageSquare } from 'lucide-react';
-import styles from '/Users/can/antigravity/web/app/[locale]/survival-kit/survival.module.css';
+import styles from '@/app/[locale]/survival-kit/survival.module.css';
 import { Button } from '@/components/ui/Button';
 
 interface AdCampaign {
