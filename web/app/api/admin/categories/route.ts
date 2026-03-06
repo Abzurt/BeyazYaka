@@ -49,8 +49,15 @@ export async function DELETE(req: Request) {
 export async function POST(req: Request) {
   try {
     await checkAdmin();
-    const { name, slug, description } = await req.json();
-    const category = await prisma.category.create({ data: { name, slug, description } });
+    const { name, slug, description, area } = await req.json();
+    const category = await prisma.category.create({ 
+      data: { 
+        name, 
+        slug, 
+        description, 
+        area: area || "forum" 
+      } 
+    });
     return NextResponse.json(category, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: error.message === "Unauthorized" ? 401 : 500 });
