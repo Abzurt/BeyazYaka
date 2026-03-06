@@ -62,11 +62,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           details: { email: user.email }
         });
 
+        // Email verification warning (allow login but signal unverified state)
+        const isEmailVerified = !!user.emailVerified;
+
         return {
           id: user.id,
           email: user.email,
           name: user.username,
           role: user.role,
+          emailVerified: isEmailVerified,
         }
       },
     }),

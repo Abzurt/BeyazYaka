@@ -27,6 +27,7 @@ const menuItems = [
   { icon: FolderTree, label: 'Kategoriler', href: '/admin/categories' },
   { icon: FileText, label: 'İçerikler', href: '/admin/posts' },
   { icon: MessageSquare, label: 'Yorumlar', href: '/admin/comments' },
+  { icon: FolderTree, label: 'Menü Yönetimi', href: '/admin/menu' },
   { icon: Flag, label: 'Raporlar', href: '/admin/reports' },
   { icon: LayoutGrid, label: 'Reklamlar', href: '/admin/ads' },
   { icon: BrainCircuit, label: 'Testler', href: '/admin/quizzes' },

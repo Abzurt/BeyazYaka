@@ -64,11 +64,8 @@ export default auth((req) => {
     }
   }
 
-  // 2. Forum Protection
-  if (isOnForum && !isLoggedIn) {
-    const locale = nextUrl.pathname.split('/')[1]
-    return Response.redirect(new URL(`/${locale}/login`, nextUrl))
-  }
+  // 2. Forum Protection has been removed to allow anonymous users to view all content
+  // as per the new Auth Control rules.
 
   return NextResponse.next()
 })

@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Search, ExternalLink, ArrowRight } from 'lucide-react';
+import { Search, ExternalLink, ArrowRight, Star, MessageSquare } from 'lucide-react';
 import styles from '/Users/can/antigravity/web/app/[locale]/survival-kit/survival.module.css';
 import { Button } from '@/components/ui/Button';
 
@@ -13,6 +13,9 @@ interface AdCampaign {
   body: string | null;
   imageUrl: string | null;
   targetUrl: string;
+  avgRating: number | null;
+  voteCount: number;
+  realCommentCount: number;
   slot: {
     name: string;
     id: string;
@@ -105,9 +108,16 @@ export const AdsHubClient: React.FC<AdsHubClientProps> = ({ campaigns, dict, loc
                 <h3 className={styles.name}>{item.title}</h3>
                 <p className={styles.desc}>{item.body?.substring(0, 100)}...</p>
                 <div className={styles.footer}>
-                  <Link href={`/${locale}/survival-kit/${item.id}`} className={styles.detailLink}>
-                     {dict.ads.buyNow} <ArrowRight size={16} />
-                  </Link>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', fontSize: '13px' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: item.avgRating ? 'var(--accent)' : 'var(--text-muted)', fontWeight: 600 }}>
+                      <Star size={13} fill={item.avgRating ? 'var(--accent)' : 'transparent'} stroke={item.avgRating ? 'var(--accent)' : 'var(--text-muted)'} />
+                      {item.avgRating ?? '—'}
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                      <MessageSquare size={13} />
+                      {item.realCommentCount}
+                    </span>
+                  </div>
                   <Button 
                     variant="outline" 
                     size="sm" 

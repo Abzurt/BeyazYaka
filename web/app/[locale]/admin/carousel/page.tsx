@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { AdminPagination } from '@/components/ui/AdminPagination';
+
 import styles from './carousel.module.css';
 import { Plus, Image as ImageIcon, GripVertical, Trash2, Edit2, Play, Pause, ExternalLink, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -20,7 +22,11 @@ import { use } from 'react';
 export default function CarouselManagement({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: currentLocale } = use(params);
   const { showToast } = useToast();
+  const [itemsPage, setItemsPage] = useState(1);
+  const ITEMS_PAGE_SIZE = 15;
   const [items, setItems] = useState<any[]>([]);
+  const [itemsTotal, setItemsTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
@@ -37,14 +43,17 @@ export default function CarouselManagement({ params }: { params: Promise<{ local
 
   useEffect(() => {
     fetchItems();
-  }, [currentLocale]);
+  }, [currentLocale, page]);
 
   const fetchItems = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/carousel?locale=${currentLocale}`);
+      const res = await fetch(`/api/admin/carousel?locale=${currentLocale}&page=${page}&pageSize=15`);
       const data = await res.json();
-      if (res.ok) setItems(data);
+      if (res.ok) {
+        setItems(data.data || []);
+        setItemsTotal(data.total || 0);
+      }
     } catch (error) {
       showToast('Veriler yüklenirken hata oluştu.', 'error');
     } finally {
@@ -289,6 +298,14 @@ export default function CarouselManagement({ params }: { params: Promise<{ local
           </div>
         </div>
       )}
+
+        <AdminPagination
+          page={page}
+          totalPages={Math.ceil(itemsTotal / 15)}
+          onPageChange={setPage}
+          totalItems={itemsTotal}
+          pageSize={15}
+        />
     </div>
   );
 }

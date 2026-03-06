@@ -65,7 +65,14 @@ export default function LoginPage({ params }: { params: Promise<{ locale: Locale
           <p className={styles.subtitle}>{t.subtitle}</p>
         </div>
 
-        {registered && <div className={styles.success}>{t.success}</div>}
+        {registered && (
+          <div className={styles.success} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <strong>✉️ Hesabın oluşturuldu!</strong>
+            <span style={{ fontSize: '13px', opacity: 0.85 }}>
+              E-posta adresine doğrulama linki gönderdik. Lütfen gelen kutunu kontrol et ve linke tıkla.
+            </span>
+          </div>
+        )}
         {error && <div className={styles.error}>{error}</div>}
 
         <form className={styles.form} onSubmit={handleLogin}>

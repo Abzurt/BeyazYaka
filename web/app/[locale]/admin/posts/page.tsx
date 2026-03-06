@@ -1,37 +1,66 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { AdminPagination } from '@/components/ui/AdminPagination';
 import styles from './posts.module.css';
-import { Search, Filter, Check, X, Clock, ExternalLink, MessageCircle, Undo } from 'lucide-react';
+import { Search, Filter, Check, X, Clock, ExternalLink, MessageCircle, Undo, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 
 export default function PostsManagement() {
   const { showToast } = useToast();
-  const [posts, setPosts] = useState([
-    { id: '1', title: 'Kurumsal Mail Dili Çeviri Sözlüğü', author: 'yazar_aytek', status: 'published', date: '06.03.2026', views: 1240, comments: 12 },
-    { id: '2', title: 'İstifanın En Şık Yolu: 5 Adımda Veda', author: 'plaza_krali', status: 'pending', date: '06.03.2026', views: 0, comments: 0 },
-    { id: '3', title: 'Müdürüm Beni Neden Sevmiyor?', author: 'dertli_beyazyaka', status: 'published', date: '05.03.2026', views: 820, comments: 45 },
-    { id: '4', title: 'Yemek Kartı ile Hayatta Kalma Rehberi', author: 'stajyer_can', status: 'rejected', date: '04.03.2026', views: 0, comments: 0 },
-  ]);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('');
+  const PAGE_SIZE = 15;
 
-  const handleUpdateStatus = (id: string, newStatus: string) => {
-    setPosts(prev => prev.map(p => {
-      if (p.id === id) {
-        showToast(`"${p.title}" yazısı ${newStatus === 'published' ? 'onaylandı' : 'reddedildi'}.`, newStatus === 'published' ? 'success' : 'info');
-        return { ...p, status: newStatus };
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({ page: String(page), pageSize: String(PAGE_SIZE) });
+      if (search) params.set('search', search);
+      if (status) params.set('status', status);
+      const res = await fetch(`/api/admin/posts?${params}`);
+      if (res.ok) {
+        const { data, total: t } = await res.json();
+        setPosts(data || []);
+        setTotal(t || 0);
       }
-      return p;
-    }));
+    } catch {
+      showToast('Yazılar yüklenemedi.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [page, search, status]);
+
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
+
+  const handleUpdateStatus = async (id: string, newStatus: string, title: string) => {
+    try {
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setPosts(prev => prev.map(p => p.id === id ? { ...p, status: newStatus } : p));
+        showToast(`"${title}" ${newStatus === 'published' ? 'onaylandı' : 'reddedildi'}.`, newStatus === 'published' ? 'success' : 'info');
+      } else {
+        showToast('İşlem başarısız.', 'error');
+      }
+    } catch {
+      showToast('Bir hata oluştu.', 'error');
+    }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch(status) {
-      case 'published': return <Check size={14} />;
-      case 'pending': return <Clock size={14} />;
-      case 'rejected': return <X size={14} />;
-      default: return null;
-    }
+  const getStatusIcon = (s: string) => {
+    if (s === 'published') return <Check size={14} />;
+    if (s === 'pending') return <Clock size={14} />;
+    if (s === 'rejected') return <X size={14} />;
+    return null;
   };
 
   return (
@@ -39,7 +68,7 @@ export default function PostsManagement() {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>İçerik Moderasyonu</h1>
-          <p className={styles.subtitle}>Bekleyen yazıları onaylayabilir veya yayındaki içerikleri yönetebilirsiniz.</p>
+          <p className={styles.subtitle}>Bekleyen yazıları onaylayabilir veya yayındaki içerikleri yönetebilirsiniz. <strong>{total}</strong> yazı.</p>
         </div>
       </header>
 
@@ -47,62 +76,89 @@ export default function PostsManagement() {
         <div className={styles.cardHeader}>
           <div className={styles.searchBox}>
             <Search size={18} />
-            <input type="text" placeholder="Başlık veya yazar ile ara..." onChange={() => {}} />
+            <input
+              type="text"
+              placeholder="Başlık veya slug ile ara..."
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1); }}
+            />
           </div>
           <div className={styles.filters}>
-            <Button variant="outline" size="sm" icon={Filter} onClick={() => showToast('Gelişmiş filtreler yakında!', 'info')}>Durum: Hepsi</Button>
+            <select
+              value={status}
+              onChange={e => { setStatus(e.target.value); setPage(1); }}
+              style={{ padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-dim)', background: 'var(--bg-card)', color: 'var(--text-primary)' }}
+            >
+              <option value="">Durum: Hepsi</option>
+              <option value="published">Yayında</option>
+              <option value="pending">Beklemede</option>
+              <option value="rejected">Reddedildi</option>
+            </select>
           </div>
         </div>
 
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>İçerik Başlığı</th>
-              <th>Yazar</th>
-              <th>Durum</th>
-              <th>Tarih</th>
-              <th>İstatistik</th>
-              <th className={styles.actionCol}>İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr key={post.id} className={styles[post.status]}>
-                <td className={styles.titleCol}>
-                  <strong>{post.title}</strong>
-                  <button className={styles.previewLink} onClick={() => showToast('Önizleme modu yakında!', 'info')}><ExternalLink size={12} /> Önizle</button>
-                </td>
-                <td>@{post.author}</td>
-                <td>
-                  <span className={`${styles.statusBadge} ${styles[post.status]}`}>
-                    {getStatusIcon(post.status)}
-                    {post.status.charAt(0).toUpperCase() + post.status.slice(1)}
-                  </span>
-                </td>
-                <td>{post.date}</td>
-                <td>
-                  <div className={styles.stats}>
-                    <span title="Görüntülenme"><ExternalLink size={12} /> {post.views}</span>
-                    <span title="Yorumlar"><MessageCircle size={12} /> {post.comments}</span>
-                  </div>
-                </td>
-                <td className={styles.actionCol}>
-                  <div className={styles.actions}>
-                    {post.status === 'pending' ? (
-                      <>
-                        <Button size="sm" icon={Check} onClick={() => handleUpdateStatus(post.id, 'published')}>Onayla</Button>
-                        <Button variant="ghost" size="sm" icon={X} className={styles.rejectBtn} onClick={() => handleUpdateStatus(post.id, 'rejected')}>Reddet</Button>
-                      </>
-                    ) : (
-                      <Button variant="ghost" size="sm" icon={Undo} onClick={() => handleUpdateStatus(post.id, 'pending')}>Geri Al</Button>
-                    )}
-                  </div>
-                </td>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+            <Loader2 size={32} style={{ animation: 'spin 1s linear infinite' }} />
+          </div>
+        ) : (
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>İçerik Başlığı</th>
+                <th>Yazar</th>
+                <th>Alan</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th className={styles.actionCol}>İşlemler</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {posts.map((post) => (
+                <tr key={post.id} className={styles[post.status]}>
+                  <td className={styles.titleCol}>
+                    <strong>{post.title}</strong>
+                    {post.slug && (
+                      <a href={`/tr/yazi/${post.slug}`} target="_blank" rel="noopener noreferrer" className={styles.previewLink}>
+                        <ExternalLink size={12} /> Önizle
+                      </a>
+                    )}
+                  </td>
+                  <td>@{post.author?.username || '—'}</td>
+                  <td><span style={{ fontSize: '12px', opacity: 0.7 }}>{post.area}</span></td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${styles[post.status]}`}>
+                      {getStatusIcon(post.status)}
+                      {post.status}
+                    </span>
+                  </td>
+                  <td>{new Date(post.createdAt).toLocaleDateString('tr-TR')}</td>
+                  <td className={styles.actionCol}>
+                    <div className={styles.actions}>
+                      {post.status === 'pending' ? (
+                        <>
+                          <Button size="sm" icon={Check} onClick={() => handleUpdateStatus(post.id, 'published', post.title)}>Onayla</Button>
+                          <Button variant="ghost" size="sm" icon={X} className={styles.rejectBtn} onClick={() => handleUpdateStatus(post.id, 'rejected', post.title)}>Reddet</Button>
+                        </>
+                      ) : (
+                        <Button variant="ghost" size="sm" icon={Undo} onClick={() => handleUpdateStatus(post.id, 'pending', post.title)}>Geri Al</Button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
+
+      <AdminPagination
+        page={page}
+        totalPages={Math.ceil(total / PAGE_SIZE)}
+        onPageChange={setPage}
+        totalItems={total}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

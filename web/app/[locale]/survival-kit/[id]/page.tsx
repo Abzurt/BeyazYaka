@@ -2,8 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ExternalLink, MessageCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { CommentRatingForm } from '@/components/ui/CommentRatingForm';
-import { CommentItem } from '@/components/ui/CommentItem';
+import { CommentSection } from '@/components/ui/CommentSection';
 import styles from './page.module.css';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
@@ -25,12 +24,17 @@ export default async function AdDetailPage({ params }: { params: Promise<{ id: s
     return notFound();
   }
 
-  // Fetch comments for this campaign (using campaign ID as postId since the schema uses Post model for comments)
-  // Wait, the Comment model belongs to Post. Let's check schema again.
-  // Model Comment { postId String... }
-  // AdCampaign doesn't have comments relation in schema. 
-  // I should use the campaign ID as the "postId" in Comment table, but that would violate FK if not handled.
-  // Actually, let's check schema.prisma again.
+  // Fetch the average rating from the DB
+  const ratingAgg = await prisma.postRating.aggregate({
+    where: { campaignId: id },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
+
+  const avgRating = ratingAgg._avg.rating
+    ? ratingAgg._avg.rating.toFixed(1)
+    : null;
+  const ratingCount = ratingAgg._count.rating;
   return (
     <div className={styles.detailWrapper}>
       <div className="container">
@@ -65,22 +69,7 @@ export default async function AdDetailPage({ params }: { params: Promise<{ id: s
               <p>{campaign.body}</p>
             </div>
             
-            <section className={styles.commentSection}>
-              <h2 className={styles.sectionTitle}>
-                <MessageCircle size={28} color="var(--accent)" /> 
-                {dict.ads.commentsTitle}
-              </h2>
-              
-              {/* Note: In a real app, AdCampaign would need its own Comment model or a generic one. 
-                  For this MVP, we pass the campaign.id as postId to the existing component.
-                  We need to ensure Prisma can handle this if we were to actually save. 
-                  Since we are focused on UI/UX now, we'll placeholder the data. */}
-              <CommentRatingForm postId={campaign.id} dict={dict.comments} />
-              
-              <div style={{ marginTop: 'var(--space-xl)' }}>
-                 <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>{dict.comments.noComments}</p>
-              </div>
-            </section>
+            <CommentSection targetId={campaign.id} targetType="campaign" dict={dict.comments} />
           </div>
 
           <aside className={styles.sidebar}>
@@ -99,7 +88,12 @@ export default async function AdDetailPage({ params }: { params: Promise<{ id: s
                   {dict.ads.buyNow}
                 </Button>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--accent)', fontWeight: '600' }}>
-                   <Star size={16} fill="var(--accent)" /> 4.9 / 5
+                   <Star size={16} fill="var(--accent)" />
+                   {avgRating ? (
+                     <span>{avgRating} / 5 <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '12px' }}>({ratingCount} oy)</span></span>
+                   ) : (
+                     <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>Henüz oy yok</span>
+                   )}
                 </div>
               </div>
             </div>

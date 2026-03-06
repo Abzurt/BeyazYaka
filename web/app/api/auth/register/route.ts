@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hashPassword, validatePassword } from "@/lib/security";
+import { sendVerificationEmail } from "@/lib/email";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   try {
@@ -43,7 +45,30 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ message: "User created successfully" }, { status: 201 });
+    // Generate verification token (5 minutes TTL)
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+    await prisma.emailVerification.create({
+      data: {
+        userId: user.id,
+        token,
+        expiresAt,
+      },
+    });
+
+    // Send verification email (non-blocking - don't fail registration if email fails)
+    try {
+      await sendVerificationEmail(email, username, token);
+    } catch (emailError) {
+      console.error("Verification email send error:", emailError);
+      // Continue - user is created, email will be resent via another flow if needed
+    }
+
+    return NextResponse.json(
+      { message: "Hesabın oluşturuldu! E-postana gönderilen doğrulama linkine tıklaman gerekiyor." },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

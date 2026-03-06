@@ -7,6 +7,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { i18n, type Locale } from '@/lib/i18n-config';
 import { getDictionary } from '@/lib/get-dictionary';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,6 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
+import prisma from '@/lib/prisma';
+
 export default async function RootLayout({
   children,
   params,
@@ -29,21 +32,17 @@ export default async function RootLayout({
   const { locale } = await params;
   const dict = await getDictionary(locale as Locale);
 
-  const isAdmin = (await params).locale === locale && (await params).locale ? false : false; // Placeholder for logic
-  // Better way: use headers or just check if children/path is admin in a client component?
-  // Since this is a server component, we should probably pass a prop or use a layout strategy.
-  // Actually, the easiest way in Next.js App Router to have different roots is to use Route Groups, 
-  // but changing folder structure now might be too much.
-  // Let's use a simpler check: if it's an admin route, we don't render the header.
+  const menuItems = await prisma.menuItem.findMany({
+    where: { locale, isActive: true },
+    orderBy: { order: 'asc' },
+  });
 
   return (
     <html lang={locale}>
       <body className={inter.className}>
         <AuthProvider>
           <ToastProvider>
-            {/* We will handle header/footer visibility in a cleaner way if possible, 
-                but for now let's wrap the main logic. */}
-            <LayoutWrapper locale={locale as Locale} dict={dict}>
+            <LayoutWrapper locale={locale as Locale} dict={dict} menuItems={menuItems}>
               {children}
             </LayoutWrapper>
           </ToastProvider>
@@ -52,6 +51,3 @@ export default async function RootLayout({
     </html>
   );
 }
-
-// Separate client component to handle conditional rendering based on pathname
-import LayoutWrapper from '@/components/layout/LayoutWrapper';

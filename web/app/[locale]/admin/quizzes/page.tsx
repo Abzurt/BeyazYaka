@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { AdminPagination } from '@/components/ui/AdminPagination';
+
 import styles from './quizzes.module.css';
 import { BrainCircuit, Plus, Edit2, BarChart2, Eye, Trash2, HelpCircle, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -12,18 +14,21 @@ export default function QuizManagement() {
   const { showToast } = useToast();
   const { locale } = useParams();
   const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [quizzesTotal, setQuizzesTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchQuizzes();
-  }, []);
+  }, [page]);
 
   const fetchQuizzes = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/quizzes?admin=true&locale=${locale}`);
-      const data = await res.json();
-      setQuizzes(data);
+      const res = await fetch(`/api/quizzes?admin=true&page=${page}&pageSize=15`);
+      const { data, total } = await res.json();
+      setQuizzes(data || []);
+      setQuizzesTotal(total || 0);
     } catch (error) {
       showToast('Testler yüklenirken bir hata oluştu.', 'error');
     } finally {
@@ -120,6 +125,14 @@ export default function QuizManagement() {
           </Link>
         </div>
       )}
+
+        <AdminPagination
+          page={page}
+          totalPages={Math.ceil(quizzesTotal / 15)}
+          onPageChange={setPage}
+          totalItems={quizzesTotal}
+          pageSize={15}
+        />
     </div>
   );
 }

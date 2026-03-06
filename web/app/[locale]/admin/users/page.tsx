@@ -5,6 +5,7 @@ import styles from './users.module.css';
 import { Search, UserPlus, Filter, MoreVertical, Shield, Ban, CheckCircle, RotateCcw, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
+import { AdminPagination } from '@/components/ui/AdminPagination';
 
 interface User {
   id: string;
@@ -35,7 +36,7 @@ export default function UsersManagement() {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/users?page=${page}&search=${search}`);
+      const res = await fetch(`/api/admin/users?page=${page}&search=${search}&pageSize=15`);
       const data = await res.json();
       if (data.users) {
         setUsers(data.users);
@@ -209,13 +210,13 @@ export default function UsersManagement() {
           </table>
         )}
 
-        <div className={styles.pagination}>
-          <span>{total} sonuçtan {(page - 1) * 10 + 1}-{Math.min(page * 10, total)} arası gösteriliyor</span>
-          <div className={styles.pageButtons}>
-            <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Önceki</Button>
-            <Button variant="outline" size="sm" disabled={page * 10 >= total} onClick={() => setPage(p => p + 1)}>Sonraki</Button>
-          </div>
-        </div>
+        <AdminPagination
+          page={page}
+          totalPages={Math.ceil(total / 15)}
+          onPageChange={setPage}
+          totalItems={total}
+          pageSize={15}
+        />
       </div>
 
       {isModalOpen && (

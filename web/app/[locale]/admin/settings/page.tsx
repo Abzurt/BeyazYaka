@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './settings.module.css';
 import { Save, Shield, Bell, Globe, Lock, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -13,15 +13,56 @@ export default function SystemSettings() {
     siteName: 'Beyaz Yaka Dosyası',
     maintenance: false,
     lockout: true,
-    emailNotif: true
+    emailNotif: true,
+    authControl: true,
+    cacheTTL: 5
   });
 
-  const handleSave = () => {
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setSettings(prev => ({ ...prev, ...data }));
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const handleSave = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      });
+      if (res.ok) {
+        showToast('Sistem ayarları başarıyla güncellendi.', 'success');
+      } else {
+        showToast('Ayarlar güncellenirken bir hata oluştu.', 'error');
+      }
+    } catch (error) {
+      showToast('Ayarlar güncellenirken bir hata oluştu.', 'error');
+    } finally {
       setLoading(false);
-      showToast('Sistem ayarları başarıyla güncellendi.', 'success');
-    }, 800);
+    }
+  };
+
+  const handlePurgeCache = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/cache-reset', { method: 'POST' });
+      if (res.ok) {
+        showToast('Önbellek başarıyla temizlendi.', 'success');
+      } else {
+        showToast('Cache temizlenirken hata oluştu.', 'error');
+      }
+    } catch (error) {
+      showToast('İşlem başarısız.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,13 +99,20 @@ export default function SystemSettings() {
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <Shield size={20} />
-            <h2>Güvenlik</h2>
+            <h2>Güvenlik ve Yetkilendirme</h2>
           </div>
           <div className={styles.formGroup}>
             <label>Hesap Kilitleme</label>
             <div className={styles.toggleRow}>
               <span>Hatalı girişte geçici blokla</span>
               <input type="checkbox" checked={settings.lockout} onChange={(e) => setSettings({...settings, lockout: e.target.checked})} />
+            </div>
+          </div>
+          <div className={styles.formGroup}>
+            <label>Auth Kontrolü (Yetkilendirme)</label>
+            <div className={styles.toggleRow}>
+              <span>Sitedeki kullanıcı kurallarını (yorum/metin engeli vb.) uygula</span>
+              <input type="checkbox" checked={settings.authControl} onChange={(e) => setSettings({...settings, authControl: e.target.checked})} />
             </div>
           </div>
           <div className={styles.formGroup}>
@@ -83,6 +131,33 @@ export default function SystemSettings() {
               <span>Yeni raporlarda e-posta gönder</span>
               <input type="checkbox" checked={settings.emailNotif} onChange={(e) => setSettings({...settings, emailNotif: e.target.checked})} />
             </div>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <Cpu size={20} />
+            <h2>Performans ve Önbellek</h2>
+          </div>
+          <div className={styles.formGroup}>
+            <label>Önbellek Süresi (TTL - Dakika)</label>
+            <div className={styles.toggleRow}>
+              <span>Verilerin sunucuda saklanma süresi</span>
+              <input 
+                type="number" 
+                style={{ width: '80px', background: 'var(--bg-dark)', border: '1px solid var(--border)', borderRadius: '4px', padding: '4px 8px', color: 'white' }}
+                value={settings.cacheTTL} 
+                onChange={(e) => setSettings({...settings, cacheTTL: parseInt(e.target.value)})} 
+              />
+            </div>
+          </div>
+          <div className={styles.formGroup} style={{ marginTop: '16px' }}>
+            <Button variant="outline" onClick={handlePurgeCache} disabled={loading} style={{ width: '100%', borderColor: 'rgba(200,246,63,0.3)', color: 'var(--accent)' }}>
+              Tüm Önbelleği (Cache) Temizle
+            </Button>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+              Bu işlem sunucu tarafındaki tüm önbelleği sıfırlar ve sayfaların yeni verilerle oluşturulmasını sağlar.
+            </p>
           </div>
         </section>
       </div>

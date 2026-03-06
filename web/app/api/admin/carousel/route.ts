@@ -18,13 +18,21 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const locale = searchParams.get("locale");
 
+    const page = parseInt(searchParams.get("page") || "1");
+    const pageSize = parseInt(searchParams.get("pageSize") || "15");
+    const skip = (page - 1) * pageSize;
     const where = locale ? { locale } : {};
 
-    const items = await prisma.carouselItem.findMany({
-      where,
-      orderBy: { order: "asc" },
-    });
-    return NextResponse.json(items);
+    const [items, total] = await Promise.all([
+      prisma.carouselItem.findMany({
+        where,
+        orderBy: { order: "asc" },
+        skip,
+        take: pageSize,
+      }),
+      prisma.carouselItem.count({ where }),
+    ]);
+    return NextResponse.json({ data: items, total });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: error.message === "Unauthorized" ? 401 : 500 });
   }

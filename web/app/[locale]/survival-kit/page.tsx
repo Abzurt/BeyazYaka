@@ -25,6 +25,36 @@ export default async function SurvivalKitPage({ params }: { params: Promise<{ lo
     }
   });
 
+  const campaignIds = campaigns.map((c: any) => c.id);
+
+  const [ratingAggs, commentCounts] = await Promise.all([
+    prisma.postRating.groupBy({
+      by: ['campaignId'],
+      where: { campaignId: { in: campaignIds } },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+    prisma.comment.groupBy({
+      by: ['campaignId'],
+      where: { campaignId: { in: campaignIds }, isDeleted: false },
+      _count: { id: true },
+    }),
+  ]);
+
+  const ratingMap = Object.fromEntries(
+    ratingAggs.map((r: any) => [r.campaignId, { avg: r._avg.rating, count: r._count.rating }])
+  );
+  const commentMap = Object.fromEntries(
+    commentCounts.map((c: any) => [c.campaignId, c._count.id])
+  );
+
+  const enrichedCampaigns = campaigns.map((c: any) => ({
+    ...c,
+    avgRating: ratingMap[c.id]?.avg ? Number(ratingMap[c.id].avg!.toFixed(1)) : null,
+    voteCount: ratingMap[c.id]?.count ?? 0,
+    realCommentCount: commentMap[c.id] ?? 0,
+  }));
+
   return (
     <div className="container" style={{ paddingTop: 'var(--space-xxl)' }}>
       <header style={{ marginBottom: 'var(--space-xxl)', textAlign: 'center' }}>
@@ -34,7 +64,7 @@ export default async function SurvivalKitPage({ params }: { params: Promise<{ lo
         </p>
       </header>
 
-      <AdsHubClient campaigns={campaigns} dict={dict} locale={locale} />
+      <AdsHubClient campaigns={enrichedCampaigns} dict={dict} locale={locale} />
     </div>
   );
 }

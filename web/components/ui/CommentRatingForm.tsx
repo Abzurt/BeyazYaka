@@ -9,12 +9,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 interface CommentRatingFormProps {
-  postId: string;
+  targetId: string;
+  targetType: 'post' | 'quiz' | 'campaign';
   onSuccess?: () => void;
   dict: any;
 }
 
-export function CommentRatingForm({ postId, onSuccess, dict }: CommentRatingFormProps) {
+export function CommentRatingForm({ targetId, targetType, onSuccess, dict }: CommentRatingFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
@@ -41,17 +42,42 @@ export function CommentRatingForm({ postId, onSuccess, dict }: CommentRatingForm
     setError('');
 
     try {
-      // API call placeholder
-      console.log(`Submitting ${type}:`, { postId, rating, comment });
-      
-      // Mimic API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (type === 'vote' || type === 'comment') {
+        // Submit rating if > 0
+        if (rating > 0) {
+          const rateRes = await fetch('/api/rates', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetId, targetType, rating })
+          });
+          if (!rateRes.ok) throw new Error('Rating failed');
+        }
+      }
+
+      if (type === 'comment' && comment.trim()) {
+        const commentRes = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            [`${targetType}Id`]: targetId,
+            content: comment
+          })
+        });
+
+        if (!commentRes.ok) {
+          const errorData = await commentRes.json();
+          throw new Error(errorData.error || 'Comment failed');
+        }
+      }
       
       setComment('');
       setRating(0);
       onSuccess?.();
-    } catch (err) {
-      setError(dict.errorFallback || 'Bir hata oluştu, lütfen tekrar deneyin.');
+    } catch (err: any) {
+      setError(err.message === 'Comment failed' || err.message === 'Rating failed' 
+        ? (dict.errorFallback || 'Bir hata oluştu, lütfen tekrar deneyin.')
+        : err.message
+      );
     } finally {
       setIsSubmitting(false);
     }

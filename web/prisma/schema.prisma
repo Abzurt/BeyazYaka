@@ -45,47 +45,48 @@ enum AdType {
 }
 
 model User {
-  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username          String?            @unique @db.VarChar(30)
-  email             String             @unique @db.VarChar(255)
-  emailVerified     DateTime?          @map("email_verified")
-  passwordHash      String?            @map("password_hash")
-  role              UserRole           @default(member)
-  displayName       String?            @map("display_name") @db.VarChar(60)
-  bio               String?
-  image             String?            @map("avatar_url") // Mapping avatarUrl to image for NextAuth
-  city              String?            @db.VarChar(100)
-  sector            String?            @db.VarChar(100)
-  workModel         String?            @map("work_model") @db.VarChar(20)
-  isActive          Boolean            @default(true) @map("is_active")
-  isBanned          Boolean            @default(false) @map("is_banned")
-  
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username      String?   @unique @db.VarChar(30)
+  email         String    @unique @db.VarChar(255)
+  emailVerified DateTime? @map("email_verified")
+  passwordHash  String?   @map("password_hash")
+  role          UserRole  @default(member)
+  displayName   String?   @map("display_name") @db.VarChar(60)
+  bio           String?
+  image         String?   @map("avatar_url") // Mapping avatarUrl to image for NextAuth
+  city          String?   @db.VarChar(100)
+  sector        String?   @db.VarChar(100)
+  workModel     String?   @map("work_model") @db.VarChar(20)
+  isActive      Boolean   @default(true) @map("is_active")
+  isBanned      Boolean   @default(false) @map("is_banned")
+
   // Security & Lockout
-  failedLoginAttempts Int              @default(0) @map("failed_login_attempts")
-  lockoutUntil        DateTime?        @map("lockout_until")
-  
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockoutUntil        DateTime? @map("lockout_until")
+
   // Password Reset
-  resetTokenHash      String?          @map("reset_token_hash")
-  resetTokenExpires   DateTime?        @map("reset_token_expires")
-  
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @default(now()) @updatedAt @map("updated_at")
-  lastLoginAt       DateTime?          @map("last_login_at")
-  
-  accounts          Account[]
-  sessions          Session[]
-  posts             Post[]
-  comments          Comment[]
-  ratings           PostRating[]
-  likedComments     CommentLike[]
-  reportsSubmitted  Report[]           @relation("Reporter")
-  reportsReviewed   Report[]           @relation("Reviewer")
-  savedPosts        SavedPost[]
-  badges            UserBadge[]
-  quizResults       QuizResult[]
-  emailLeads        EmailLead[]
-  subscriptions     UserSubscription[]
-  logs              UserLog[]
+  resetTokenHash    String?   @map("reset_token_hash")
+  resetTokenExpires DateTime? @map("reset_token_expires")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  accounts         Account[]
+  sessions         Session[]
+  posts            Post[]
+  comments         Comment[]
+  ratings          PostRating[]
+  likedComments    CommentLike[]
+  reportsSubmitted Report[]           @relation("Reporter")
+  reportsReviewed  Report[]           @relation("Reviewer")
+  savedPosts       SavedPost[]
+  badges           UserBadge[]
+  quizResults      QuizResult[]
+  emailLeads       EmailLead[]
+  subscriptions    UserSubscription[]
+  logs                UserLog[]
+  emailVerifications  EmailVerification[]
 
   @@map("users")
 }
@@ -104,18 +105,18 @@ model UserLog {
 }
 
 model Account {
-  id                 String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId             String  @map("user_id") @db.Uuid
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String  @map("user_id") @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -147,42 +148,42 @@ model Category {
   isActive          Boolean        @default(true) @map("is_active")
   locale            String         @default("tr")
   createdAt         DateTime       @default(now()) @map("created_at")
-  
-  posts             Post[]
+
+  posts Post[]
 
   @@map("categories")
 }
 
 model Post {
-  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  authorId       String         @map("author_id") @db.Uuid
-  author         User           @relation(fields: [authorId], references: [id])
-  categoryId     String         @map("category_id") @db.Uuid
-  category       Category       @relation(fields: [categoryId], references: [id])
-  title          String         @db.VarChar(180)
-  slug           String         @unique @db.VarChar(220)
-  excerpt        String?
-  content        String
-  coverImageUrl  String?        @map("cover_image_url")
-  area           ContentArea
-  visibility     VisibilityType
-  status         ContentStatus  @default(pending)
-  isAnonymous    Boolean        @default(false) @map("is_anonymous")
-  isFeatured     Boolean        @default(false) @map("is_featured")
-  allowComments  Boolean        @default(true) @map("allow_comments")
-  isSponsored    Boolean        @default(false) @map("is_sponsored")
-  viewCount      Int            @default(0) @map("view_count")
-  commentCount   Int            @default(0) @map("comment_count")
-  publishedAt    DateTime?      @map("published_at")
-  locale         String         @default("tr")
-  createdAt      DateTime       @default(now()) @map("created_at")
-  updatedAt      DateTime       @default(now()) @updatedAt @map("updated_at")
-  
-  tags           PostTag[]
-  comments       Comment[]
-  ratings        PostRating[]
-  reports        Report[]
-  savedBy        SavedPost[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  authorId      String         @map("author_id") @db.Uuid
+  author        User           @relation(fields: [authorId], references: [id])
+  categoryId    String         @map("category_id") @db.Uuid
+  category      Category       @relation(fields: [categoryId], references: [id])
+  title         String         @db.VarChar(180)
+  slug          String         @unique @db.VarChar(220)
+  excerpt       String?
+  content       String
+  coverImageUrl String?        @map("cover_image_url")
+  area          ContentArea
+  visibility    VisibilityType
+  status        ContentStatus  @default(pending)
+  isAnonymous   Boolean        @default(false) @map("is_anonymous")
+  isFeatured    Boolean        @default(false) @map("is_featured")
+  allowComments Boolean        @default(true) @map("allow_comments")
+  isSponsored   Boolean        @default(false) @map("is_sponsored")
+  viewCount     Int            @default(0) @map("view_count")
+  commentCount  Int            @default(0) @map("comment_count")
+  publishedAt   DateTime?      @map("published_at")
+  locale        String         @default("tr")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @default(now()) @updatedAt @map("updated_at")
+
+  tags     PostTag[]
+  comments Comment[]
+  ratings  PostRating[]
+  reports  Report[]
+  savedBy  SavedPost[]
 
   @@map("posts")
 }
@@ -208,8 +209,8 @@ model PostTag {
 
 model Comment {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  postId    String    @map("post_id") @db.Uuid
-  post      Post      @relation(fields: [postId], references: [id])
+  postId    String?   @map("post_id") @db.Uuid
+  post      Post?     @relation(fields: [postId], references: [id])
   userId    String    @map("user_id") @db.Uuid
   user      User      @relation(fields: [userId], references: [id])
   parentId  String?   @map("parent_id") @db.Uuid
@@ -217,32 +218,38 @@ model Comment {
   replies   Comment[] @relation("CommentToComment")
   quizId    String?   @map("quiz_id") @db.Uuid
   quiz      Quiz?     @relation(fields: [quizId], references: [id])
+  campaignId String?  @map("campaign_id") @db.Uuid
+  campaign   AdCampaign? @relation(fields: [campaignId], references: [id])
   content   String
   isEdited  Boolean   @default(false) @map("is_edited")
   isDeleted Boolean   @default(false) @map("is_deleted")
   likeCount Int       @default(0) @map("like_count")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
-  
-  likes     CommentLike[]
-  reports   Report[]
+
+  likes   CommentLike[]
+  reports Report[]
 
   @@map("comments")
 }
 
 model PostRating {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  postId    String   @map("post_id") @db.Uuid
-  post      Post     @relation(fields: [postId], references: [id])
+  postId    String?   @map("post_id") @db.Uuid
+  post      Post?     @relation(fields: [postId], references: [id])
   userId    String   @map("user_id") @db.Uuid
   user      User     @relation(fields: [userId], references: [id])
-  quizId    String?   @map("quiz_id") @db.Uuid
-  quiz      Quiz?     @relation(fields: [quizId], references: [id])
+  quizId    String?  @map("quiz_id") @db.Uuid
+  quiz      Quiz?    @relation(fields: [quizId], references: [id])
+  campaignId String? @map("campaign_id") @db.Uuid
+  campaign   AdCampaign? @relation(fields: [campaignId], references: [id])
   rating    Int      @db.SmallInt
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@unique([postId, userId])
+  @@unique([quizId, userId])
+  @@unique([campaignId, userId])
   @@map("post_ratings")
 }
 
@@ -258,20 +265,20 @@ model CommentLike {
 }
 
 model Report {
-  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  reporterUserId   String       @map("reporter_user_id") @db.Uuid
-  reporter         User         @relation("Reporter", fields: [reporterUserId], references: [id])
-  targetType       String       @map("target_type") @db.VarChar(20)
-  targetPostId     String?      @map("target_post_id") @db.Uuid
-  targetPost       Post?        @relation(fields: [targetPostId], references: [id])
-  targetCommentId  String?      @map("target_comment_id") @db.Uuid
-  targetComment    Comment?     @relation(fields: [targetCommentId], references: [id])
-  reason           String
-  status           ReportStatus @default(open)
-  reviewedBy       String?      @map("reviewed_by") @db.Uuid
-  reviewer         User?        @relation("Reviewer", fields: [reviewedBy], references: [id])
-  reviewedAt       DateTime?    @map("reviewed_at")
-  createdAt        DateTime     @default(now()) @map("created_at")
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reporterUserId  String       @map("reporter_user_id") @db.Uuid
+  reporter        User         @relation("Reporter", fields: [reporterUserId], references: [id])
+  targetType      String       @map("target_type") @db.VarChar(20)
+  targetPostId    String?      @map("target_post_id") @db.Uuid
+  targetPost      Post?        @relation(fields: [targetPostId], references: [id])
+  targetCommentId String?      @map("target_comment_id") @db.Uuid
+  targetComment   Comment?     @relation(fields: [targetCommentId], references: [id])
+  reason          String
+  status          ReportStatus @default(open)
+  reviewedBy      String?      @map("reviewed_by") @db.Uuid
+  reviewer        User?        @relation("Reviewer", fields: [reviewedBy], references: [id])
+  reviewedAt      DateTime?    @map("reviewed_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
 
   @@map("reports")
 }
@@ -309,17 +316,17 @@ model UserBadge {
 }
 
 model Quiz {
-  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String         @db.VarChar(160)
-  slug        String         @unique @db.VarChar(180)
-  coverImageUrl String?    @map("cover_image_url")
-  isActive    Boolean        @default(true) @map("is_active")
-  locale      String         @default("tr")
-  createdAt   DateTime       @default(now()) @map("created_at")
-  questions   QuizQuestion[]
-  results     QuizResult[]
-  comments    Comment[]
-  ratings     PostRating[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String         @db.VarChar(160)
+  slug          String         @unique @db.VarChar(180)
+  coverImageUrl String?        @map("cover_image_url")
+  isActive      Boolean        @default(true) @map("is_active")
+  locale        String         @default("tr")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  questions     QuizQuestion[]
+  results       QuizResult[]
+  comments      Comment[]
+  ratings       PostRating[]
 
   @@map("quizzes")
 }
@@ -385,18 +392,20 @@ model AdSlot {
 }
 
 model AdCampaign {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  slotId    String   @map("slot_id") @db.Uuid
-  slot      AdSlot   @relation(fields: [slotId], references: [id])
-  title     String   @db.VarChar(160)
-  imageUrl  String?  @map("image_url")
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slotId    String    @map("slot_id") @db.Uuid
+  slot      AdSlot    @relation(fields: [slotId], references: [id])
+  title     String    @db.VarChar(160)
+  imageUrl  String?   @map("image_url")
   body      String?
-  targetUrl String   @map("target_url")
+  targetUrl String    @map("target_url")
   startsAt  DateTime? @map("starts_at")
   endsAt    DateTime? @map("ends_at")
-  isActive  Boolean  @default(true) @map("is_active")
-  locale    String   @default("tr")
-  createdAt DateTime @default(now()) @map("created_at")
+  isActive  Boolean   @default(true) @map("is_active")
+  locale    String    @default("tr")
+  createdAt DateTime  @default(now()) @map("created_at")
+  comments  Comment[]
+  ratings   PostRating[]
 
   @@map("ad_campaigns")
 }
@@ -441,4 +450,38 @@ model CarouselItem {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("carousel_items")
+}
+
+model MenuItem {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String   @db.VarChar(100)
+  url       String   @db.VarChar(255)
+  order     Int      @default(0)
+  isActive  Boolean  @default(true) @map("is_active")
+  locale    String   @default("tr")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("menu_items")
+}
+
+model SystemSetting {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("system_settings")
+}
+
+model EmailVerification {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique @db.VarChar(255)
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("email_verifications")
 }

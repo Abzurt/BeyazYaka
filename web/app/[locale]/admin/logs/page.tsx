@@ -5,6 +5,8 @@ import styles from './logs.module.css';
 import { Search, Filter, Activity, Clock, User as UserIcon, Shield, Search as SearchIcon, Loader2, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
+import { AdminPagination } from '@/components/ui/AdminPagination';
+import { ADMIN_LOG_ACTIONS, LOG_ACTION_OPTIONS } from '@/lib/admin-constants';
 
 interface Log {
   id: string;
@@ -34,6 +36,7 @@ export default function AdminLogs() {
     try {
       const query = new URLSearchParams({
         page: page.toString(),
+        limit: '15',
         search,
         action: actionFilter
       });
@@ -48,7 +51,7 @@ export default function AdminLogs() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, actionFilter, showToast]);
+  }, [page, search, actionFilter]); // showToast is stable via useCallback in ToastProvider
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,33 +60,11 @@ export default function AdminLogs() {
     return () => clearTimeout(timer);
   }, [fetchLogs]);
 
-  const getActionLabel = (action: string) => {
-    switch (action) {
-      case 'create_post': return 'İçerik Oluşturma';
-      case 'edit_post': return 'İçerik Düzenleme';
-      case 'delete_post': return 'İçerik Silme';
-      case 'create_user': return 'Yeni Üye Kaydı';
-      case 'update_user': return 'Üye Güncelleme';
-      case 'delete_user': return 'Üye Silme';
-      case 'login': return 'Giriş Yapıldı';
-      case 'create_carousel_item': return 'Manşet Ekleme';
-      case 'update_carousel_item': return 'Manşet Güncelleme';
-      case 'delete_carousel_item': return 'Manşet Silme';
-      case 'create_ad_campaign': return 'Kampanya Ekleme';
-      case 'update_ad_campaign': return 'Kampanya Güncelleme';
-      case 'delete_ad_campaign': return 'Kampanya Silme';
-      case 'create_quiz': return 'Test Ekleme';
-      case 'edit_quiz': return 'Test Güncelleme';
-      case 'delete_quiz': return 'Test Silme';
-      default: return action;
-    }
-  };
+  const getActionLabel = (action: string) => ADMIN_LOG_ACTIONS[action]?.label || action;
 
   const getActionColor = (action: string) => {
-    if (action.includes('delete')) return styles.deleteColor;
-    if (action.includes('create')) return styles.createColor;
-    if (action.includes('edit') || action.includes('update')) return styles.updateColor;
-    return styles.defaultColor;
+    const colorClass = ADMIN_LOG_ACTIONS[action]?.colorClass;
+    return colorClass ? styles[colorClass] : styles.defaultColor;
   };
 
   return (
@@ -110,21 +91,9 @@ export default function AdminLogs() {
           <Filter size={16} />
           <select value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
             <option value="">Tüm İşlemler</option>
-            <option value="create_post">İçerik Oluşturma</option>
-            <option value="edit_post">İçerik Düzenleme</option>
-            <option value="delete_post">İçerik Silme</option>
-            <option value="create_user">Yeni Üye Kaydı</option>
-            <option value="update_user">Üye Güncelleme</option>
-            <option value="delete_user">Üye Silme</option>
-            <option value="create_carousel_item">Manşet Ekleme</option>
-            <option value="update_carousel_item">Manşet Güncelleme</option>
-            <option value="delete_carousel_item">Manşet Silme</option>
-            <option value="create_ad_campaign">Kampanya Ekleme</option>
-            <option value="update_ad_campaign">Kampanya Güncelleme</option>
-            <option value="delete_ad_campaign">Kampanya Silme</option>
-            <option value="create_quiz">Test Ekleme</option>
-            <option value="edit_quiz">Test Güncelleme</option>
-            <option value="delete_quiz">Test Silme</option>
+            {LOG_ACTION_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
           </select>
         </div>
       </div>
@@ -195,13 +164,13 @@ export default function AdminLogs() {
           </div>
         )}
 
-        <div className={styles.pagination}>
-          <span>{total} sonuçtan {(page - 1) * 20 + 1}-{Math.min(page * 20, total)} arası gösteriliyor</span>
-          <div className={styles.pageButtons}>
-            <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Önceki</Button>
-            <Button variant="outline" size="sm" disabled={page * 20 >= total} onClick={() => setPage(p => p + 1)}>Sonraki</Button>
-          </div>
-        </div>
+        <AdminPagination
+          page={page}
+          totalPages={Math.ceil(total / 15)}
+          onPageChange={setPage}
+          totalItems={total}
+          pageSize={15}
+        />
       </div>
     </div>
   );

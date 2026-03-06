@@ -20,6 +20,9 @@ interface CommentItemProps {
     content: string;
     time: string;
   }>;
+  targetId?: string;
+  targetType?: 'post' | 'quiz' | 'campaign';
+  onReplySuccess?: () => void;
 }
 
 export function CommentItem({ 
@@ -29,7 +32,10 @@ export function CommentItem({
   time, 
   initialLikes = 0,
   dict,
-  replies = []
+  replies = [],
+  targetId,
+  targetType,
+  onReplySuccess
 }: CommentItemProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -38,21 +44,33 @@ export function CommentItem({
   const [isLiked, setIsLiked] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [commentReply, setCommentReply] = useState('');
+  const [isLiking, setIsLiking] = useState(false);
+  const [isSubmittingReply, setIsSubmittingReply] = useState(false);
 
   const isAuthenticated = status === 'authenticated';
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!isAuthenticated) {
       router.push(`/login?callbackUrl=${window.location.pathname}`);
       return;
     }
     
-    if (isLiked) {
-      setLikes(prev => prev - 1);
-    } else {
-      setLikes(prev => prev + 1);
+    if (isLiking) return;
+    setIsLiking(true);
+
+    try {
+      const res = await fetch(`/api/comments/${id}/like`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        // data.liked boolean tells if user liked or unliked
+        setLikes(prev => data.liked ? prev + 1 : prev - 1);
+        setIsLiked(data.liked);
+      }
+    } catch (err) {
+      console.error('Failed to toggle like:', err);
+    } finally {
+      setIsLiking(false);
     }
-    setIsLiked(!isLiked);
   };
 
   const handleReplyToggle = () => {
@@ -63,11 +81,31 @@ export function CommentItem({
     setShowReplyForm(!showReplyForm);
   };
 
-  const handleReplySubmit = () => {
-    if (!isAuthenticated) return;
-    console.log(`Reply to ${id}:`, commentReply);
-    setCommentReply('');
-    setShowReplyForm(false);
+  const handleReplySubmit = async () => {
+    if (!isAuthenticated || !commentReply.trim() || !targetId || !targetType) return;
+    
+    setIsSubmittingReply(true);
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          [`${targetType}Id`]: targetId,
+          content: commentReply,
+          parentId: id
+        })
+      });
+
+      if (res.ok) {
+        setCommentReply('');
+        setShowReplyForm(false);
+        onReplySuccess?.();
+      }
+    } catch (err) {
+      console.error('Failed to post reply:', err);
+    } finally {
+      setIsSubmittingReply(false);
+    }
   };
 
   return (
@@ -83,6 +121,7 @@ export function CommentItem({
             variant="ghost" 
             size="sm" 
             onClick={handleLike}
+            disabled={isLiking}
             className={isLiked ? styles.activeLike : ''}
           >
             <ThumbsUp size={16} /> {dict.like} ({likes})
@@ -105,8 +144,10 @@ export function CommentItem({
               onChange={(e) => setCommentReply(e.target.value)}
             />
             <div className={styles.replyActions}>
-              <Button size="sm" variant="ghost" onClick={() => setShowReplyForm(false)}>{dict.cancel}</Button>
-              <Button size="sm" onClick={handleReplySubmit} disabled={!commentReply.trim()}>{dict.reply}</Button>
+              <Button size="sm" variant="ghost" onClick={() => setShowReplyForm(false)} disabled={isSubmittingReply}>{dict.cancel}</Button>
+              <Button size="sm" onClick={handleReplySubmit} disabled={!commentReply.trim() || isSubmittingReply}>
+                {isSubmittingReply ? dict.loading || 'Gönderiliyor...' : dict.reply}
+              </Button>
             </div>
           </div>
         )}

@@ -26,7 +26,38 @@ export async function GET(req: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(posts);
+    // Fetch real stats: avg rating + real comment count for each post in parallel
+    const postIds = posts.map((p: any) => p.id);
+
+    const [ratingAggs, commentCounts] = await Promise.all([
+      prisma.postRating.groupBy({
+        by: ['postId'],
+        where: { postId: { in: postIds } },
+        _avg: { rating: true },
+        _count: { rating: true },
+      }),
+      prisma.comment.groupBy({
+        by: ['postId'],
+        where: { postId: { in: postIds }, isDeleted: false },
+        _count: { id: true },
+      }),
+    ]);
+
+    const ratingMap = Object.fromEntries(
+      ratingAggs.map((r: any) => [r.postId, { avg: r._avg.rating, count: r._count.rating }])
+    );
+    const commentMap = Object.fromEntries(
+      commentCounts.map((c: any) => [c.postId, c._count.id])
+    );
+
+    const enrichedPosts = posts.map((p: any) => ({
+      ...p,
+      avgRating: ratingMap[p.id]?.avg ? Number(ratingMap[p.id].avg!.toFixed(1)) : null,
+      ratingCount: ratingMap[p.id]?.count ?? 0,
+      realCommentCount: commentMap[p.id] ?? 0,
+    }));
+
+    return NextResponse.json(enrichedPosts);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
   }

@@ -2,8 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, Info, Star, MessageSquare, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { CommentRatingForm } from '@/components/ui/CommentRatingForm';
-import { CommentItem } from '@/components/ui/CommentItem';
+import { CommentSection } from '@/components/ui/CommentSection';
 import styles from './page.module.css';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
@@ -65,14 +64,7 @@ export default async function MekanDetailPage({ params }: { params: Promise<{ sl
                 <span>{item.reviewCount} {dict.home.starVotes}</span>
               </div>
             </div>
-            <section className={styles.commentSection}>
-              <h2 className={styles.sectionTitle}><MessageCircle /> {dict.common.forum} ({item.reviewCount})</h2>
-              <CommentRatingForm postId={post.id} dict={dict.comments} />
-              
-              <div className={styles.commentList}>
-                <p className={styles.noComments}>{dict.comments.noComments || 'Henüz yorum yapılmamış. İlk yorumu sen yap!'}</p>
-              </div>
-            </section>
+            <CommentSection targetId={post.id} targetType="post" dict={dict.comments} />
           </div>
         </div>
         <div className={styles.bannerImageWrapper}>

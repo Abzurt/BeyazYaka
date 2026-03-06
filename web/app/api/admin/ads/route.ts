@@ -24,11 +24,22 @@ export async function GET(req: Request) {
       return NextResponse.json(slots);
     }
 
-    const campaigns = await prisma.adCampaign.findMany({
-      include: { slot: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json(campaigns);
+    const page = parseInt(searchParams.get("page") || "1");
+    const pageSize = parseInt(searchParams.get("pageSize") || "15");
+    const skip = (page - 1) * pageSize;
+    const where: any = {};
+
+    const [campaigns, total] = await Promise.all([
+      prisma.adCampaign.findMany({
+        where,
+        include: { slot: true },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: pageSize,
+      }),
+      prisma.adCampaign.count({ where }),
+    ]);
+    return NextResponse.json({ data: campaigns, total });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: error.message === "Unauthorized" ? 401 : 500 });
   }

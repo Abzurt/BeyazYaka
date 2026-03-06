@@ -2,8 +2,7 @@
 
 import styles from './category.module.css';
 import { Card } from '@/components/ui/Card';
-import { StarRating } from '@/components/ui/StarRating';
-import { MessageSquare, User, ArrowLeft } from 'lucide-react';
+import { Star, MessageSquare, User, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getDictionary } from '@/lib/get-dictionary';
 import type { Locale } from '@/lib/i18n-config';
@@ -104,10 +103,16 @@ export default function CategoryPage({
                     </div>
                   </div>
                   <div className={styles.stats}>
-                    <StarRating initialRating={4.5} size={16} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent)', fontWeight: 600, fontSize: '14px' }}>
+                      <Star size={14} fill="var(--accent)" stroke="var(--accent)" />
+                      <span>{post.avgRating != null ? `${post.avgRating}` : '—'}</span>
+                      {post.ratingCount > 0 && (
+                        <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '12px' }}>({post.ratingCount})</span>
+                      )}
+                    </div>
                     <div className={styles.comments}>
                       <MessageSquare size={16} />
-                      <span>{post.commentCount}</span>
+                      <span>{post.realCommentCount}</span>
                     </div>
                   </div>
                 </a>

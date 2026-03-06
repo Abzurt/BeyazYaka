@@ -13,16 +13,28 @@ export async function GET(req: Request) {
     const where: any = adminMode ? {} : { isActive: true };
     if (locale) where.locale = locale;
 
-    const quizzes = await prisma.quiz.findMany({
-      where,
-      include: {
-        _count: {
-          select: { results: true, questions: true }
-        }
-      },
-      orderBy: { createdAt: 'desc' }
-    });
+    const page = adminMode ? parseInt(searchParams.get('page') || '1') : 1;
+    const pageSize = adminMode ? parseInt(searchParams.get('pageSize') || '15') : 1000;
+    const skip = (page - 1) * pageSize;
 
+    const [quizzes, total] = await Promise.all([
+      prisma.quiz.findMany({
+        where,
+        include: {
+          _count: {
+            select: { results: true, questions: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: pageSize,
+      }),
+      prisma.quiz.count({ where }),
+    ]);
+
+    if (adminMode) {
+      return NextResponse.json({ data: quizzes, total });
+    }
     return NextResponse.json(quizzes);
   } catch (error) {
     console.error("GET /api/quizzes error:", error);

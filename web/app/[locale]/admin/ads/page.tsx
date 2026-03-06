@@ -1,4 +1,8 @@
+'use client';
+
 import { useState, useEffect } from 'react';
+import { AdminPagination } from '@/components/ui/AdminPagination';
+
 import styles from './ads.module.css';
 import { 
   Megaphone, Plus, Power, Trash2, Edit2, BarChart3, 
@@ -13,7 +17,11 @@ export default function AdManagement() {
   const [activeMetric, setActiveMetric] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAd, setEditingAd] = useState<any>(null);
+  const [adsPage, setAdsPage] = useState(1);
+  const ADS_PAGE_SIZE = 15;
   const [ads, setAds] = useState<any[]>([]);
+  const [adsTotal, setAdsTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [slots, setSlots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -30,19 +38,22 @@ export default function AdManagement() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const [adsRes, slotsRes] = await Promise.all([
-        fetch('/api/admin/ads?type=campaigns'),
+        fetch(`/api/admin/ads?page=${page}&pageSize=15`),
         fetch('/api/admin/ads?type=slots')
       ]);
       const adsData = await adsRes.json();
       const slotsData = await slotsRes.json();
       
-      if (adsRes.ok) setAds(adsData);
+      if (adsRes.ok) {
+        setAds(adsData.data || []);
+        setAdsTotal(adsData.total || 0);
+      }
       if (slotsRes.ok) {
         setSlots(slotsData);
         if (slotsData.length > 0 && !formData.slotId) {
@@ -309,6 +320,14 @@ export default function AdManagement() {
           </div>
         </div>
       )}
+
+        <AdminPagination
+          page={page}
+          totalPages={Math.ceil(adsTotal / 15)}
+          onPageChange={setPage}
+          totalItems={adsTotal}
+          pageSize={15}
+        />
     </div>
   );
 }

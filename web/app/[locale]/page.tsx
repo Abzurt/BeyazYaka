@@ -55,7 +55,8 @@ export default function Home({ params }: { params: Promise<{ locale: Locale }> }
         title: p.title,
         subtitle: p.category?.name || '',
         content: p.excerpt || p.content?.slice(0, 120) + '...',
-        votes: p.viewCount,
+        avgRating: p.avgRating,
+        ratingCount: p.ratingCount,
         slug: p.slug,
         categorySlug: p.category?.slug,
       }))
@@ -101,11 +102,13 @@ export default function Home({ params }: { params: Promise<{ locale: Locale }> }
                 footer={
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-xs" style={{ color: 'var(--accent)' }}>
-                      <Star size={16} fill="var(--accent)" />
-                      <span style={{ fontWeight: 600 }}>4.9</span>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                        ({item.votes} {dict.home.starVotes})
-                      </span>
+                      <Star size={16} fill={item.avgRating ? 'var(--accent)' : 'transparent'} stroke={item.avgRating ? 'var(--accent)' : 'var(--text-muted)'} />
+                      <span style={{ fontWeight: 600 }}>{item.avgRating ?? '—'}</span>
+                      {item.ratingCount > 0 && (
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                          ({item.ratingCount} {dict.home.starVotes})
+                        </span>
+                      )}
                     </div>
                     {item.slug && (
                       <a

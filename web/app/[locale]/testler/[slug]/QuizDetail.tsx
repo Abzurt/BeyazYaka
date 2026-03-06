@@ -13,8 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { CommentRatingForm } from '@/components/ui/CommentRatingForm';
-import { CommentItem } from '@/components/ui/CommentItem';
+import { CommentSection } from '@/components/ui/CommentSection';
 import styles from './quizDetail.module.css';
 import Image from 'next/image';
 
@@ -203,18 +202,7 @@ export default function QuizDetail({ dict }: { dict: any }) {
           </div>
         )}
 
-        <section className={styles.commentsSection}>
-          <div className={styles.sectionHeader}>
-            <MessageCircle size={24} color="var(--accent)" />
-            <h2>{qDict.communityTitle}</h2>
-          </div>
-          
-          <CommentRatingForm postId={quiz.id} dict={dict.comments} />
-          
-          <div className={styles.commentList}>
-            <p className={styles.noComments}>{dict.comments.noComments}</p>
-          </div>
-        </section>
+        <CommentSection targetId={quiz.id} targetType="quiz" dict={dict.comments} />
       </div>
     </div>
   );
