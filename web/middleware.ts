@@ -72,5 +72,5 @@ export default auth((req) => {
 
 export const config = {
   // Matcher ignoring `/_next/`, `/api/`, and public asset folders
-  matcher: ['/((?!api|_next/static|_next/image|images|uploads|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/|images|uploads|favicon.ico|robots.txt|sitemap.xml).*)'],
 }
