@@ -124,7 +124,7 @@ export const AdsHubClient: React.FC<AdsHubClientProps> = ({ campaigns, dict, loc
                     icon={ExternalLink}
                     onClick={() => window.open(item.targetUrl, '_blank')}
                   >
-                    Satın Al
+                    {dict.ads.buyNow}
                   </Button>
                 </div>
               </div>
