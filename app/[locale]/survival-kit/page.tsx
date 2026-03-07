@@ -11,6 +11,7 @@ export default async function SurvivalKitPage({ params }: { params: Promise<{ lo
   const campaigns = await prisma.adCampaign.findMany({
     where: {
       isActive: true,
+      locale: locale,
       slot: {
         locationKey: {
           startsWith: 'survival-kit'
