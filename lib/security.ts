@@ -6,19 +6,12 @@ import zxcvbn from "zxcvbn-typescript";
  */
 function generateSalt(length = 16): Uint8Array {
   const salt = new Uint8Array(length);
-  const cryptoObj = typeof crypto !== 'undefined' ? crypto : (typeof window !== 'undefined' ? window.crypto : null);
-  
-  if (cryptoObj && cryptoObj.getRandomValues) {
-    cryptoObj.getRandomValues(salt);
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(salt);
   } else {
-    // Fallback for environment where crypto is not global but available via require
-    try {
-      const nodeCrypto = require('crypto');
-      const bytes = nodeCrypto.randomBytes(length);
-      for (let i = 0; i < length; i++) salt[i] = bytes[i];
-    } catch (e) {
-      // Last resort fallback (less secure but prevents crash)
-      for (let i = 0; i < length; i++) salt[i] = Math.floor(Math.random() * 256);
+    // Edge Runtime always has global crypto. This is a safe fallback for other environments.
+    for (let i = 0; i < length; i++) {
+      salt[i] = Math.floor(Math.random() * 256);
     }
   }
   return salt;
@@ -59,10 +52,10 @@ export async function verifyPassword(hash: string, password: string): Promise<bo
   try {
     const parts = hash.split('$');
     if (parts.length < 6) return false;
-    
+
     const params = parts[3];
     const saltBase64 = parts[4];
-    
+
     const [mParam, tParam, pParam] = params.split(',');
     const m = parseInt(mParam.split('=')[1]);
     const t = parseInt(tParam.split('=')[1]);
