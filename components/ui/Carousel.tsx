@@ -6,7 +6,7 @@ import styles from './Carousel.module.css';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CarouselItem {
-  id: number;
+  id: string | number;
   title: string;
   subtitle?: string;
   image: string;
@@ -18,9 +18,9 @@ interface CarouselProps {
   autoPlayInterval?: number;
 }
 
-export const Carousel: React.FC<CarouselProps> = ({ 
-  items, 
-  autoPlayInterval = 5000 
+export const Carousel: React.FC<CarouselProps> = ({
+  items,
+  autoPlayInterval = 5000
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -63,7 +63,7 @@ export const Carousel: React.FC<CarouselProps> = ({
             key={item.id}
             className={`${styles.slide} ${index === currentIndex ? styles.slideActive : ''}`}
             onClick={() => window.location.href = item.link}
-            style={{ 
+            style={{
               opacity: index === currentIndex ? 1 : 0,
               visibility: index === currentIndex ? 'visible' : 'hidden',
               transition: 'opacity 0.6s ease-in-out'

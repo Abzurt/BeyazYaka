@@ -1,80 +1,93 @@
-"use client";
-
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Carousel } from '@/components/ui/Carousel';
-import { useState, useEffect } from 'react';
 import { Star, TrendingUp, ShieldCheck, ExternalLink } from 'lucide-react';
 import styles from './page.module.css';
-import { use } from 'react';
 import { getDictionary } from '@/lib/get-dictionary';
 import type { Locale } from '@/lib/i18n-config';
+import prisma from '@/lib/prisma';
+import { ContentArea } from '@prisma/client';
 
-export default function Home({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = use(params);
-  const [dict, setDict] = useState<any>(null);
-  const [carouselItems, setCarouselItems] = useState<any[]>([]);
-  const [trendingPosts, setTrendingPosts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
 
-  useEffect(() => {
-    async function init() {
-      const d = await getDictionary(locale);
-      setDict(d);
+  // Fetch data directly in Server Component
+  const [carouselItems, trendingPostsRaw] = await Promise.all([
+    prisma.carouselItem.findMany({
+      where: {
+        status: "active",
+        locale: locale
+      },
+      orderBy: { order: "asc" },
+    }),
+    prisma.post.findMany({
+      where: {
+        status: "published",
+        area: ContentArea.forum,
+        locale: locale,
+        isFeatured: true
+      },
+      include: {
+        author: {
+          select: { username: true, image: true },
+        },
+        category: true,
+      },
+      orderBy: [
+        { viewCount: "desc" },
+        { createdAt: "desc" }
+      ],
+      take: 3,
+    })
+  ]);
 
-      try {
-        const [carouselRes, trendingRes] = await Promise.all([
-          fetch(`/api/carousel?locale=${locale}`),
-          fetch(`/api/posts/trending?locale=${locale}`)
-        ]);
+  // Enrich trending posts with ratings
+  const postIds = trendingPostsRaw.map(p => p.id);
+  const ratingAggs = await prisma.postRating.groupBy({
+    by: ['postId'],
+    where: { postId: { in: postIds } },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
 
-        if (carouselRes.ok) {
-          const data = await carouselRes.json();
-          setCarouselItems(data);
-        }
+  const ratingMap = Object.fromEntries(
+    ratingAggs.map(r => [r.postId, { avg: r._avg.rating, count: r._count.rating }])
+  );
 
-        if (trendingRes.ok) {
-          const data = await trendingRes.json();
-          setTrendingPosts(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    init();
-  }, [locale]);
-
-  if (!dict) return null;
+  const trendingPosts = trendingPostsRaw.map(p => ({
+    ...p,
+    avgRating: ratingMap[p.id]?.avg ? Number(ratingMap[p.id].avg.toFixed(1)) : null,
+    ratingCount: ratingMap[p.id]?.count ?? 0,
+  }));
 
   // Use dynamic trending posts if available, otherwise fall back to static dict
   const trends = trendingPosts.length > 0
     ? trendingPosts.map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        subtitle: p.category?.name || '',
-        content: p.excerpt || p.content?.slice(0, 120) + '...',
-        avgRating: p.avgRating,
-        ratingCount: p.ratingCount,
-        slug: p.slug,
-        categorySlug: p.category?.slug,
-      }))
+      id: p.id,
+      title: p.title,
+      subtitle: p.category?.name || '',
+      content: p.excerpt || p.content?.slice(0, 120) + '...',
+      avgRating: p.avgRating,
+      ratingCount: p.ratingCount,
+      slug: p.slug,
+      categorySlug: p.category?.slug,
+    }))
     : (dict.home.trends || []).map((t: any) => ({
-        ...t,
-        id: null,
-        slug: null,
-        categorySlug: null,
-      }));
+      ...t,
+      id: null,
+      slug: null,
+      categorySlug: null,
+    }));
 
   return (
     <div className={styles.main}>
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className="container" style={{ width: '100%' }}>
-          {!loading && carouselItems.length > 0 ? (
+          {carouselItems.length > 0 ? (
             <Carousel items={carouselItems} />
-          ) : !loading && (
+          ) : (
             <div className={styles.emptyCarousel}>{dict.home.emptyCarousel}</div>
           )}
         </div>
@@ -91,12 +104,12 @@ export default function Home({ params }: { params: Promise<{ locale: Locale }> }
             </h2>
             <a href={`/${locale}/forum`} className={styles.viewAll}>{dict.home.viewAll}</a>
           </div>
-          
+
           <div className="grid gap-md" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
             {trends.map((item: any, index: number) => (
-              <Card 
+              <Card
                 key={item.id || index}
-                interactive 
+                interactive
                 title={item.title}
                 subtitle={item.subtitle}
                 footer={

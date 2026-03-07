@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 const locales = ['tr', 'en']
 const defaultLocale = 'tr'
 
-export function middleware(request: NextRequest) {
+export default function middleware(request: NextRequest) {
     try {
         const { pathname } = request.nextUrl
 
