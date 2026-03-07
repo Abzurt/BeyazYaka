@@ -10,7 +10,7 @@ function getLocale(request: NextRequest): string {
   return i18n.locales.includes(preferred as any) ? preferred : i18n.defaultLocale;
 }
 
-export function middleware(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Check if there is any supported locale in the pathname
@@ -41,5 +41,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/|images|uploads|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!api|_next/|static|.*\\..*|favicon.ico|robots.txt|sitemap.xml).*)'],
 }
