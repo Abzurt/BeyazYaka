@@ -7,6 +7,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   background-color: var(--bg-dark);
   color: var(--text-primary);
@@ -16,7 +22,12 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Space Grotesk', sans-serif;
   color: var(--text-primary);
   line-height: 1.2;
@@ -43,13 +54,16 @@ button {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg-dark);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border-dim);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-bright);
 }
@@ -61,8 +75,22 @@ button {
   padding: 0 var(--space-md);
 }
 
-.flex { display: flex; }
-.grid { display: grid; }
-.gap-md { gap: var(--space-md); }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.gap-md {
+  gap: var(--space-md);
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}

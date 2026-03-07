@@ -1,5 +1,7 @@
 .main {
   padding-bottom: var(--space-xxl);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .hero {
