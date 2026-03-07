@@ -50,7 +50,11 @@ export default function Header({ locale, dict, menuItems }: HeaderProps) {
                 {/* Desktop Navigation */}
                 <nav className={styles.nav}>
                     {menuItems.map(item => (
-                        <Link key={item.id} href={`/${locale}${item.url}`} className="ghost">
+                        <Link
+                            key={item.id}
+                            href={`/${locale}${item.url}`}
+                            className={`${styles.navLink} ${pathname === `/${locale}${item.url}` ? styles.active : ''}`}
+                        >
                             {item.title}
                         </Link>
                     ))}
@@ -68,25 +72,25 @@ export default function Header({ locale, dict, menuItems }: HeaderProps) {
                 >
                     {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
+            </div>
 
-                {/* Mobile Navigation Overlay */}
-                <div className={`${styles.mobileNav} ${isMenuOpen ? styles.mobileNavActive : ''}`}>
-                    {menuItems.map(item => (
-                        <Link
-                            key={item.id}
-                            href={`/${locale}${item.url}`}
-                            className={styles.navItem}
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            {item.title}
-                        </Link>
-                    ))}
-                    <div className={styles.mobileActions}>
-                        <Button href={`/${locale}/register`} size="lg" fullWidth>
-                            {dict.common.register}
-                        </Button>
-                        <LanguageSwitcher currentLocale={locale} />
-                    </div>
+            {/* Mobile Navigation Overlay - Moved out of container for global positioning */}
+            <div className={`${styles.mobileNav} ${isMenuOpen ? styles.mobileNavActive : ''}`}>
+                {menuItems.map(item => (
+                    <Link
+                        key={item.id}
+                        href={`/${locale}${item.url}`}
+                        className={styles.navItem}
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        {item.title}
+                    </Link>
+                ))}
+                <div className={styles.mobileActions}>
+                    <Button href={`/${locale}/register`} size="lg" fullWidth>
+                        {dict.common.register}
+                    </Button>
+                    <LanguageSwitcher currentLocale={locale} />
                 </div>
             </div>
         </header>
