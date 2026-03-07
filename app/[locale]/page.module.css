@@ -95,7 +95,7 @@
 .survivalSection {
   background: linear-gradient(180deg, transparent 0%, rgba(200, 246, 63, 0.03) 100%);
   border-radius: var(--radius);
-  margin: 0 var(--space-md);
+  margin: 0;
 }
 
 .survivalContent {

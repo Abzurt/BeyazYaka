@@ -105,7 +105,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
             <a href={`/${locale}/forum`} className={styles.viewAll}>{dict.home.viewAll}</a>
           </div>
 
-          <div className="grid gap-md" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))' }}>
+          <div className="grid gap-md" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
             {trends.map((item: any, index: number) => (
               <Card
                 key={item.id || index}

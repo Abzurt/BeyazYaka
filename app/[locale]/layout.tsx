@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title: dict.common.title + ' — Maaş Var, Huzur Yok',
     description: 'Kurumsal hayatın filtresiz topluluğu. Yaz, puanla, yorum yap.',
+    viewport: 'width=device-width, initial-scale=1',
   };
 }
 
