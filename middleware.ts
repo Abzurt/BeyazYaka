@@ -18,7 +18,7 @@ function getLocale(request: NextRequest): string {
 
   // We want to default to 'tr' even if 'en' is preferred, unless 'en' is the only option or similar.
   // Or more simply, if the user explicitly wants / to go to /tr, we can just return i18n.defaultLocale.
-  
+
   try {
     const locale = matchLocale(languages, locales, i18n.defaultLocale)
     return locale
@@ -31,7 +31,7 @@ export default auth((req) => {
   const { auth, nextUrl } = req
   const isLoggedIn = !!auth
   const role = auth?.user?.role
-  
+
   const pathname = nextUrl.pathname
 
   // Check if there is any supported locale in the pathname
@@ -55,12 +55,12 @@ export default auth((req) => {
 
   const isOnAdmin = pathname.startsWith(`/${nextUrl.pathname.split('/')[1]}/admin`)
   const isOnForum = pathname.startsWith(`/${nextUrl.pathname.split('/')[1]}/forum`)
-  
+
   // 1. Admin Protection
   if (isOnAdmin) {
     if (!isLoggedIn || role !== "admin") {
       const locale = nextUrl.pathname.split('/')[1]
-      return Response.redirect(new URL(`/${locale}/login`, nextUrl))
+      return NextResponse.redirect(new URL(`/${locale}/login`, nextUrl))
     }
   }
 
