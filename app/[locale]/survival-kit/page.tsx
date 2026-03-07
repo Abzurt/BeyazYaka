@@ -57,10 +57,10 @@ export default async function SurvivalKitPage({ params }: { params: Promise<{ lo
   }));
 
   return (
-    <div className="container" style={{ paddingTop: 'var(--space-xxl)' }}>
-      <header style={{ marginBottom: 'var(--space-xxl)', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '48px', marginBottom: 'var(--space-xs)' }}>{dict.ads.hubTitle}</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '18px', maxWidth: '600px', margin: '0 auto' }}>
+    <div className="container" style={{ paddingTop: 'var(--space-xl)' }}>
+      <header style={{ marginBottom: 'var(--space-xl)', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 'clamp(32px, 6vw, 48px)', marginBottom: 'var(--space-xs)' }}>{dict.ads.hubTitle}</h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(14px, 2vw, 18px)', maxWidth: '600px', margin: '0 auto' }}>
           {dict.ads.hubSubtitle}
         </p>
       </header>

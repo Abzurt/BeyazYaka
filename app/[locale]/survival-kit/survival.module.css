@@ -208,8 +208,6 @@
 @media (max-width: 600px) {
   .productGrid {
     grid-template-columns: 1fr;
-  }
-  .header .title {
-    font-size: 32px;
+    gap: var(--space-lg);
   }
 }

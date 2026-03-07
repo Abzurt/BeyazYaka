@@ -16,9 +16,9 @@
 }
 
 .title {
-  font-size: clamp(32px, 5vw, 64px);
-  margin-bottom: var(--space-lg);
-  line-height: 1.1;
+  font-size: clamp(28px, 6vw, 48px);
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
 }
 
 .authorBar {
@@ -27,6 +27,8 @@
   align-items: center;
   padding-bottom: var(--space-lg);
   border-bottom: 1px solid var(--border-dim);
+  gap: var(--space-md);
+  flex-wrap: wrap;
 }
 
 .authorInfo {
@@ -66,9 +68,9 @@
 }
 
 .content {
-  font-size: 18px;
+  font-size: 17px;
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
 .content h3 {
@@ -185,8 +187,27 @@
     grid-template-columns: 1fr;
     gap: var(--space-xl);
   }
-  
+
   .addComment {
     position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .authorBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  .postHeader {
+    margin-bottom: var(--space-xl);
   }
 }

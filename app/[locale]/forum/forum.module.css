@@ -4,13 +4,13 @@
 }
 
 .title {
-  font-size: 48px;
+  font-size: clamp(32px, 6vw, 48px);
   margin-bottom: var(--space-xs);
 }
 
 .subtitle {
   color: var(--text-secondary);
-  font-size: 18px;
+  font-size: clamp(14px, 2vw, 18px);
 }
 
 .categoryGrid {
