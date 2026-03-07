@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-const locales = ['en', 'tr']
+// Hardcoded for safe Edge bundling
+const locales = ['tr', 'en']
 const defaultLocale = 'tr'
 
-export default function middleware(request) {
+export function middleware(request: NextRequest) {
     try {
         const { pathname } = request.nextUrl
 
@@ -18,7 +20,7 @@ export default function middleware(request) {
             let locale = defaultLocale
             if (acceptLanguage) {
                 const preferred = acceptLanguage.split(',')[0].split('-')[0].toLowerCase()
-                if (locales.includes(preferred)) {
+                if (locales.includes(preferred as any)) {
                     locale = preferred
                 }
             }
@@ -29,7 +31,7 @@ export default function middleware(request) {
 
         return NextResponse.next()
     } catch (err) {
-        console.error('Middleware execution error:', err)
+        console.error('Middleware runtime error:', err)
         return NextResponse.next()
     }
 }
