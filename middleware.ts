@@ -3,28 +3,15 @@ import authConfig from "./lib/auth.config"
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { i18n } from './lib/i18n-config'
-import { match as matchLocale } from '@formatjs/intl-localematcher'
-import Negotiator from 'negotiator'
 
 const { auth } = NextAuth(authConfig)
 
 function getLocale(request: NextRequest): string {
-  const negotiatorHeaders: Record<string, string> = {}
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value))
+  const acceptLanguage = request.headers.get('accept-language');
+  if (!acceptLanguage) return i18n.defaultLocale;
 
-  // @ts-ignore locales are readonly
-  const locales: string[] = i18n.locales
-  let languages = new Negotiator({ headers: negotiatorHeaders }).languages()
-
-  // We want to default to 'tr' even if 'en' is preferred, unless 'en' is the only option or similar.
-  // Or more simply, if the user explicitly wants / to go to /tr, we can just return i18n.defaultLocale.
-
-  try {
-    const locale = matchLocale(languages, locales, i18n.defaultLocale)
-    return locale
-  } catch (e) {
-    return i18n.defaultLocale
-  }
+  const preferred = acceptLanguage.split(',')[0].split('-')[0].toLowerCase();
+  return i18n.locales.includes(preferred as any) ? preferred : i18n.defaultLocale;
 }
 
 export default auth((req) => {
