@@ -26,11 +26,11 @@
     "hash-wasm": "^4.12.0",
     "lucide-react": "latest",
     "negotiator": "^1.0.0",
-    "next": "canary",
+    "next": "latest",
     "next-auth": "5.0.0-beta.25",
     "nodemailer": "^6.10.1",
-    "react": "rc",
-    "react-dom": "rc",
+    "react": "latest",
+    "react-dom": "latest",
     "zxcvbn-typescript": "^5.0.1"
   },
   "devDependencies": {
